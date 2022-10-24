@@ -1,0 +1,75 @@
+{% load static %}
+<header>
+    <div class="top">
+      <div class="container">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex">
+            <div class="me-4 account-expand">
+              <i class="fa fa-user"></i>
+              <p class="content-icon-header">account</p>
+              <i class="fa-solid fa-caret-down"></i>
+            </div>
+            <div>
+              <i class="fa-sharp fa-solid fa-gear fa-spin"></i>
+              <p class="content-icon-header">setting</p>
+              <i class="fa-solid fa-caret-down"></i>
+            </div>
+          </div>
+          <div class="d-flex">
+            <form id="search" class="me-4">
+              <input class="m-1" type="text" placeholder="   search">
+              <i class="fa fa-search ms-2"></i>
+            </form>
+            <div class="d-flex align-content-center">
+              <a href="{% url 'shoppingcart' %}/">
+                <i class="fa-solid fa-cart-shopping me-2"></i>
+                <p class="m-auto content-icon-header">
+                  0 item - 0đ
+                </p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <ul class="account-bar">
+          <div class="container">
+            <li><a href="{% url 'login'%}">Customers</a></li>
+            <li><a href="{% url 'logout' %}">Manage Store</a></li>
+          </div>
+        </ul>
+      </div>
+    </div>
+    <div class="header-bottom">
+      <div class="container">
+        <div class="navbar navbar-expand-lg mb-4 content-header-bottom">
+            <div class="brand">
+              <img id="logo" src="{% static 'image/VALENIA ISABEL1.png' %}">
+            </div>
+            <form id="search-bottom">
+              <input class="m-1" type="text" placeholder="   search">
+              <i class="fa fa-search ms-2"></i>
+            </form>
+            <ul class="menu">
+              <li class="bar-exit"><i class="fa-solid fa-x"></i></li>
+              <li class="nav-item">
+                <a href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="#">Introduce</a>
+              </li>
+              <li class="nav-item">
+                <a href="#">Products</a>
+              </li>
+              <li class="nav-item">
+                <a href="#">News</a>
+              </li>
+              <li class="nav-item">
+                <a href="#">Contact</a>
+              </li>
+            </ul>
+            <div id="bar-menu">
+              <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+      </div>
+    </div>
+  </header>
