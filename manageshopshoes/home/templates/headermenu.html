@@ -21,7 +21,7 @@
               <i class="fa fa-search ms-2"></i>
             </form>
             <div class="d-flex align-content-center">
-              <a href="{% url 'shoppingcart' %}/">
+              <a id="shopping-cart-link" href="{% url 'shoppingcart' %}/">
                 <i class="fa-solid fa-cart-shopping me-2"></i>
                 <p class="m-auto content-icon-header">
                   0 item - 0đ
@@ -73,3 +73,7 @@
       </div>
     </div>
   </header>
+{% block javastript %}
+{% load static %}
+<script src="/static/js/header.js"></script>
+{% endblock %}

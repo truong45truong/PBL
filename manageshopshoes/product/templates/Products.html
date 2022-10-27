@@ -71,24 +71,25 @@
             <div class="col-md-2 col-6 mb-2">
               <div class="position-relative content-col">
                 <a href="ProductDetail.html">
-                  <img src="media/photos/products/{{item.photo_products__name}}">
+                  <img src="/media/photos/products/{{item.photo_products__name}}">
                 </a>
                 <div class="ribbon new">
                   <div class="theribbon"><p>New</p> </div>
                 </div>
                 {% if item.prices__sale > 0%}
                   <div class="ribbon sale">
-                    <div class="theribbon"><p>-{{item.prices__sale}} %</p> </div>
+                    <div class="theribbon price-sale"><p>-{{item.prices__sale}} %</p> </div>
                   </div>
                   <p class="position-absolute price-value-product"> {{item.prices__price}} đ</p>
                 {% endif %}
                 <div class="text-center content-card">
-                  <p class="name-product"> {{item.name}}</p>
+                  <span id="slug-product-detail" class="d-none">{{item.slug}}</span>
+                  <p class="name-product" id="name-product-detail" > {{item.name}}</p>
                   {% if item.sex == 0 %}
                   <p class="sex-product">All</p>
                   {% endif %}
                   {% if item.sex == 1 %}
-                  <p class="sex-product">Men</p>
+                  <p class="sex-product" id="sex-product-detail">Men</p>
                   {% endif %}
                   {% if item.sex == 2 %}
                   <p class="sex-product">Women</p>
@@ -136,7 +137,7 @@
                   <div class="col-5">
                     <div class="images modalItemImg">
                       <a href="">
-                        <img src="media/photos/products/{{item.photo_products__name}}" class="d-block w-100" alt="...">
+                        <img src="/media/photos/products/{{item.photo_products__name}}" class="d-block w-100" alt="...">
                       </a>
                     </div>
                   </div>
