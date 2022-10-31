@@ -3,8 +3,10 @@ from django.contrib import messages
 from .forms import UserForm
 from .models import Users
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+@login_required
 def logoutUser(request):
     logout(request)
     return redirect('home') 
@@ -22,8 +24,7 @@ def loginPage(request):
         except:
             user=None
         if user is not None:
-            user = authenticate(request,username=username, password=password)
-            user=form.save()
+            user = authenticate(username=username,password=password)
             login(request,user,backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         else:

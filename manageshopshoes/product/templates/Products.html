@@ -94,7 +94,7 @@
                   {% if item.sex == 2 %}
                   <p class="sex-product">Women</p>
                   {% endif %}
-                  <p class="name-product"> {{item.prices__price_total}} đ</p>
+                  <p class="name-product" id="price-total"> {{item.prices__price_total}} đ</p>
                   <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal{{item.slug}}">
                     <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
                 </div>
@@ -196,9 +196,15 @@
                         </div>
                         <div class="col-auto">
                           <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <button type="button" class="btn btn-outline-secondary"><i class="fas fa-subtract"></i></button>
-                            <input name="quantityItem" min="0" max="20" size="1" value="0" class="text-center"/>
-                            <button type="button" class="btn btn-outline-secondary"><i class="fas fa-plus"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" 
+                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                              <i class="fas fa-subtract"></i>
+                            </button>
+                            <input type="number" name="quantityItem" min="0" max="20" size="1" value="0" class="text-center"/>
+                            <button type="button" class="btn btn-outline-secondary"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                            <i class="fas fa-plus"></i>
+                            </button>
                           </div>
                         </div>
                         <div class="col-auto">
