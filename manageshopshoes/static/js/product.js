@@ -14,7 +14,7 @@ $(document).ready(()=>{
         localStorage.setItem('list_shoppong_cart', JSON.stringify(list_shopping_cart));
         $.ajax({
             type:'POST',
-            url:"http://127.0.0.1:8000/order/shoppingcart/",
+            url:"http://127.0.0.1:8000/product/addidas/",
             data:
             {   
                 cart:JSON.stringify(list_shopping_cart),

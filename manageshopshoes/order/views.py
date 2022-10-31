@@ -59,10 +59,6 @@ def shoppingCartPage(request):
                 'slug': item['detail_orders__product_id__slug'],
                 'quantity': item['detail_orders__quantity']
             })
-
-    if request.method == 'POST':
-        list_product_cart = json.loads(request.POST.get('cart'))
-        request.session['cart'] = list_product_cart
     try:
         data = request.session['cart']
     except Exception:

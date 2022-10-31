@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .forms import ProductForm, PriceForm, PhotoProductForm
 from .models import Categories, Photo_products, Products, Prices, Sizes
 from django.core.paginator import Paginator
@@ -9,6 +10,7 @@ import shutil
 import datetime
 import random
 import string
+import json
 # path save photo
 
 path_upload = "C:/Users/DELL/OneDrive/Máy tính/8-2022/djangotrain/PBL/manageshopshoes/media_upload/photos"
@@ -17,6 +19,16 @@ path_root = "C:/Users/DELL/OneDrive/Máy tính/8-2022/djangotrain/PBL/manageshop
 
 
 def productPage(request, slug):
+
+    @login_required
+    def addProductSelectedInCart(request):
+        if request.method == 'POST':
+            list_product_cart = json.loads(request.POST.get('cart'))
+            request.session['cart'] = list_product_cart
+            print(list_product_cart)
+
+    addProductSelectedInCart(request)
+
     sex = request.GET.get('sexselect')
     category = request.GET.get('categoryselect')
     limit = request.GET.get('limitselect')
