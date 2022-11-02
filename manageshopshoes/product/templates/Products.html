@@ -21,7 +21,8 @@
         <div class="select-sort-content">
           <div class="row">
             <div class="my-3 sortItems w-100">
-              <form  class="nav w-100" action="{% url 'product' slug='puma' %}" method="GET" enctype="multipart/form-data">
+              <form  class="nav w-100" action="{% url 'product' slug='puma' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                 <li class="nav-item text-center col-2 m-0 p-2">
                   <a class="nav-link active text-bg-secondary" aria-current="page" href="#">Relevance</a>
                 </li>
@@ -232,5 +233,5 @@
 {% endblock %}
 {% block javastript %}
 {% load static %}
-<script src="/static/js/product.js"></script>
+<script src="/static/js/products.js"></script>
 {% endblock %}

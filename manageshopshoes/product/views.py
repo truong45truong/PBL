@@ -4,7 +4,7 @@ from .forms import ProductForm, PriceForm, PhotoProductForm
 from .models import Categories, Photo_products, Products, Prices, Sizes
 from django.core.paginator import Paginator
 from .filters import ProductFilter
-from slugify import slugify
+from django.template.defaultfilters import slugify
 import os
 import shutil
 import datetime
@@ -79,7 +79,8 @@ def productPage(request, slug):
 def productDetail(request, slug, slugproduct):
     return render(request, 'ProductDetail.html')
 
-def productNewPage(request, slugstore):
+
+def productNewPage(request):
 
     def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
@@ -88,9 +89,9 @@ def productNewPage(request, slugstore):
     form_price = PriceForm()
     form_photoproduct = PhotoProductForm()
     if request.method == 'POST':
-        form_product = ProductForm(request.POST)
         form_price = PriceForm(request.POST)
         form_photoproduct = PhotoProductForm(request.POST, request.FILES)
+        form_product = ProductForm(request.POST)
         if form_product.is_valid():
             name = form_product.cleaned_data['name']
             sex = form_product.cleaned_data['gender']
@@ -108,7 +109,6 @@ def productNewPage(request, slugstore):
             product.save()
             for i in range(35, 45):
                 quantity = request.POST.get('sizevalue_' + str(i))
-                print(quantity)
                 Sizes(size=i, quantity=quantity, product_id=product).save()
 
         if form_price.is_valid():
@@ -117,6 +117,7 @@ def productNewPage(request, slugstore):
             price_product = Prices(price=price, sale=sale, price_total=(100-float(sale))*float(price)/100,
                                    product_id=Products(id=product.id), datetime_create=datetime.datetime.now()
                                    )
+
             price_product.save()
         if form_photoproduct.is_valid():
             upload(request.FILES['data'], product.id)
@@ -126,7 +127,7 @@ def productNewPage(request, slugstore):
 
 
 def upload(f, product):
-    if(f.name.split('.')[-1] in ['png', 'jpg', 'webp']):
+    if (f.name.split('.')[-1] in ['png', 'jpg', 'webp']):
         file = open(
             os.path.join(path_upload, "products", str(
                 product) + '.' + f.name.split('.')[-1]),

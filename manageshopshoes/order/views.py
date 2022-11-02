@@ -47,18 +47,18 @@ def shoppingCartPage(request):
     @login_required
     def getProductOfUser(request,data):
         current_user = request.user
-        user = Users.objects.get(login=current_user)
-        user = Users.objects.get(login=current_user)
-        if check_password(user.password, current_user.password):
-            customer = Customers.objects.filter(users__login=current_user)
-            product_cart_user = Orders.objects.filter(customer_id=customer[0], detail_orders__isnull=False).values(
-                'detail_orders__product_id__slug', 'detail_orders__quantity'
-            )
-        for item in product_cart_user:
-            data.append({
-                'slug': item['detail_orders__product_id__slug'],
-                'quantity': item['detail_orders__quantity']
-            })
+        if current_user.is_anonymous:
+            user = Users.objects.get(login=current_user)
+            if check_password(user.password, current_user.password):
+                customer = Customers.objects.filter(users__login=current_user)
+                product_cart_user = Orders.objects.filter(customer_id=customer[0], detail_orders__isnull=False).values(
+                    'detail_orders__product_id__slug', 'detail_orders__quantity'
+                )
+            for item in product_cart_user:
+                data.append({
+                    'slug': item['detail_orders__product_id__slug'],
+                    'quantity': item['detail_orders__quantity']
+                })
     try:
         data = request.session['cart']
     except Exception:

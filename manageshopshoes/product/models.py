@@ -20,7 +20,6 @@ class Products(models.Model):
     description=models.TextField(null=True)
     store_id=models.ForeignKey(Stores, on_delete=models.SET_NULL, null=True)
     category_id=models.ForeignKey(Categories, on_delete=models.SET_NULL, null=True)
-    fields = ['product_id','product_name','product_quantity','product_detail','product_store','product_category']
 
     def __str__(self):
         return self.name
@@ -28,7 +27,7 @@ class Sizes(models.Model):
     id = models.BigAutoField(primary_key=True)
     size= models.IntegerField()
     quantity = models.IntegerField(null=True)
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True,blank=True,related_name='sizes')
 
     def __str__(self):
         return self.product_id.name +"-"+ str(self.size)
@@ -45,14 +44,16 @@ class Prices(models.Model):
     price=models.FloatField(null=True)
     sale=models.FloatField(null=True)
     status=models.BooleanField(null=True)
-    datetime_create=models.DateTimeField()
+    datetime_create=models.DateTimeField(null=True)
     price_total=models.FloatField(null=True)
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
-    fields = ['price','sale']
+    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True,blank=True,related_name='prices')
+
+
+
 class Photo_products(models.Model):
     id = models.BigAutoField(primary_key=True)
     name=models.CharField(max_length=50,null=True)
     data=models.ImageField()
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True,blank=True,related_name='photo_products')
 
     fields = ['data']

@@ -1,9 +1,12 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
+from rest_framework import routers
 
+
+router = routers.SimpleRouter()
+router.register(r'product',views.Productviewset)
+router.register(r'price',views.Priceviewset)
+router.register(r'size',views.Sizeviewset)
 urlpatterns = [
-    path('product/',views.getAllProduct),
-    path('product/<str>:<slug>/',views.getProduct),
-    path('shoppingcart/product',views.getAllProduct),
-    path('product/create',views.createProduct)
+    path('', include((router.urls))),
 ]
