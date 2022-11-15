@@ -4,12 +4,24 @@ from .forms import UserForm
 from .models import Users
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.backends import ModelBackend
+
+
 # Create your views here.
+class CustomBackend(ModelBackend):
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        try:
+            user = Users.objects.get(username=username)
+            if user.check_password(password):
+                return user
+        except Exception as e:
+            return None
 
 @login_required
 def logoutUser(request):
     logout(request)
-    return redirect('home') 
+    return redirect('login')
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -20,11 +32,10 @@ def loginPage(request):
             username=form.cleaned_data['username']
             password=form.cleaned_data['password']
         try:
-            user = Users.objects.get(login=username,password=password)
-        except:
+            user = authenticate(request,username=username,password=password)
+        except Exception as e:
             user=None
         if user is not None:
-            user = authenticate(username=username,password=password)
             login(request,user,backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         else:
@@ -44,9 +55,10 @@ def registerPage(request):
             messages.success(request,'mật khẩu không trùng!')
             return render(request,'base/register.html')
         try:
-            user = Users.objects.get(login=username,password=password)
+            user = Users.objects.get(username=username)
         except:
-            user=Users(name=name,login=username,password=password,phone=phone,email=email)
+            user=Users(name=name,username=username,phone=phone,email=email)
+            user.password =make_password(password)
             user.save()
             messages.success(request,'Register success!')
             return redirect('login')

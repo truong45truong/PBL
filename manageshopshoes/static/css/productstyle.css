@@ -80,6 +80,11 @@
   .filterRes {
     display: none;
   }
+  .list-size{
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+  }
   @media only screen and (max-width: 1400px) {
     .search-filter {
       display: none;

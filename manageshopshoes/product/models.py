@@ -23,6 +23,7 @@ class Products(models.Model):
 
     def __str__(self):
         return self.name
+        
 class Sizes(models.Model):
     id = models.BigAutoField(primary_key=True)
     size= models.IntegerField()

@@ -26,7 +26,7 @@ class Payments(models.Model):
     type = models.IntegerField()
     allowed = models.BooleanField()
     datetime = models.DateTimeField()
-    order_id = models.ForeignKey(Orders, on_delete=models.SET_NULL, null=True)
+    order_id = models.ForeignKey(Orders, on_delete=models.SET_NULL, null=True,blank=True,related_name='detailorders')
 
 class Detail_orders(models.Model):
     id = models.BigAutoField(primary_key=True)

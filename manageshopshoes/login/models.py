@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import UserManager
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class Stores(models.Model):
@@ -21,21 +21,21 @@ class Customers(models.Model):
     address = models.CharField(max_length=50)
     birthday = models.DateField()
 
-class Users(AbstractBaseUser):
+    def __str__(self):
+        return self.name
+class Users(AbstractUser):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=200)
     email = models.EmailField(unique=True, null=True)
     phone = models.CharField(max_length=10)
     avatar = models.ImageField(null=True, default="avatar.svg")
-    login = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
+    password = models.CharField(max_length=200)
     store_id = models.ForeignKey(Stores, on_delete=models.SET_NULL, null=True)
     customer_id = models.ForeignKey(Customers, on_delete=models.SET_NULL, null=True)
 
-    objects = UserManager()
-    USERNAME_FIELD = 'login'
-    REQUIRED_FIELDS = []
-
+    USERNAME_FIELD = 'username'
+    def __str__(self):
+        return self.username
 class Feedbacks(models.Model):
     id = models.BigAutoField(primary_key=True)
     reason = models.CharField(max_length=200,null=False)

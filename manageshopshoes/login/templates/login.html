@@ -16,8 +16,8 @@
 
     <form action="{% url 'login'%}" method="POST" class="form login">
       {% csrf_token %}
-      {{ form }}
-
+      {{form.username}}
+      {{form.password}}
       {% for message in messages %}
 								<p id ='messages' style="color:red;" >{{message}}</p>
 							{%endfor%}

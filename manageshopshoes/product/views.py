@@ -20,15 +20,6 @@ path_root = "C:/Users/DELL/OneDrive/Máy tính/8-2022/djangotrain/PBL/manageshop
 
 def productPage(request, slug):
 
-    @login_required
-    def addProductSelectedInCart(request):
-        if request.method == 'POST':
-            list_product_cart = json.loads(request.POST.get('cart'))
-            request.session['cart'] = list_product_cart
-            print(list_product_cart)
-
-    addProductSelectedInCart(request)
-
     sex = request.GET.get('sexselect')
     category = request.GET.get('categoryselect')
     limit = request.GET.get('limitselect')
@@ -73,7 +64,7 @@ def productPage(request, slug):
     paginator = Paginator(filtered_qs, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'products.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages)})
+    return render(request, 'products.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) })
 
 
 def productDetail(request, slug, slugproduct):
@@ -117,6 +108,7 @@ def productNewPage(request):
             price_product = Prices(price=price, sale=sale, price_total=(100-float(sale))*float(price)/100,
                                    product_id=Products(id=product.id), datetime_create=datetime.datetime.now()
                                    )
+    
 
             price_product.save()
         if form_photoproduct.is_valid():

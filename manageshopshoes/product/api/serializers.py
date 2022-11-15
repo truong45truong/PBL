@@ -1,5 +1,4 @@
-from dataclasses import fields
-from rest_framework.serializers import ModelSerializer,RelatedField
+from rest_framework.serializers import ModelSerializer
 from product.models import Products, Prices, Sizes,Photo_products
 
 class SizesSerializer(ModelSerializer):
