@@ -1,5 +1,5 @@
-from order.models import Orders, Detail_orders
-from product.models import Products
+from order.models import Order, Detail_order
+from product.models import Product
 from rest_framework import serializers
 
 class DetailOrderSerializer(serializers.ModelSerializer):
@@ -7,16 +7,15 @@ class DetailOrderSerializer(serializers.ModelSerializer):
     quantity = serializers.IntegerField()
 
     class Meta:
-        model = Detail_orders
+        model = Detail_order
         fields = ['product_id','status','quantity']
     def create(self, validated_data):
-        print(validated_data)
-        detail_order = Detail_orders.objects.create(**validated_data)
+        detail_order = Detail_order.objects.create(**validated_data)
         return detail_order
 class OrderSerializer(serializers.ModelSerializer):
     detailorders = DetailOrderSerializer(many=True)
     class Meta:
-        model = Orders
+        model = Order
         fields = [
             'name','datetime',
             'receiver','address_receiver',

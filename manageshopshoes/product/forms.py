@@ -1,7 +1,7 @@
 from dataclasses import fields
 from secrets import choice
 from django.forms import ModelForm
-from .models import Products,Photo_products,Prices,Sizes
+from .models import Product, Photo_product, Price, Size
 from django import forms
 
 class ProductForm(ModelForm):
@@ -12,13 +12,13 @@ class ProductForm(ModelForm):
     )
     gender = forms.ChoiceField(choices=CHOICE)
     class Meta:
-        model = Products
+        model = Product
         fields = ['name','gender','category_id','description']
 class PhotoProductForm(ModelForm):
     class Meta:
-        model =Photo_products
+        model =Photo_product
         fields =['data']
 class PriceForm(ModelForm):
     class Meta:
-        model = Prices
+        model = Price
         fields = ['price','sale']

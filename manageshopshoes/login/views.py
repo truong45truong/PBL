@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from .forms import UserForm
-from .models import Users
+from .models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
@@ -12,7 +12,7 @@ from django.contrib.auth.backends import ModelBackend
 class CustomBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            user = Users.objects.get(username=username)
+            user = User.objects.get(username=username)
             if user.check_password(password):
                 return user
         except Exception as e:
@@ -21,7 +21,7 @@ class CustomBackend(ModelBackend):
 @login_required
 def logoutUser(request):
     logout(request)
-    return redirect('login')
+    return redirect('home')
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -55,9 +55,9 @@ def registerPage(request):
             messages.success(request,'mật khẩu không trùng!')
             return render(request,'base/register.html')
         try:
-            user = Users.objects.get(username=username)
+            user = User.objects.get(username=username)
         except:
-            user=Users(name=name,username=username,phone=phone,email=email)
+            user=User(name=name,username=username,phone=phone,email=email)
             user.password =make_password(password)
             user.save()
             messages.success(request,'Register success!')
@@ -66,3 +66,4 @@ def registerPage(request):
         if user is not None:
             messages.success(request,'Account already exists!')
     return render(request,'register.html')
+

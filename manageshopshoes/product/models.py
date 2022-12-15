@@ -1,9 +1,8 @@
-from dataclasses import fields
 from django.db import models
-from login.models import Stores,Users
+from login.models import Store,User
 # Create your models here.
 
-class Categories(models.Model):
+class Categorie(models.Model):
     id = models.BigAutoField(primary_key=True)
     slug = models.CharField(null=False,max_length=50)
     name=models.CharField(max_length=50)
@@ -12,49 +11,49 @@ class Categories(models.Model):
 
     def __str__(self):
         return self.name
-class Products(models.Model):
+class Product(models.Model):
     id = models.BigAutoField(primary_key=True)
     slug = models.CharField(null=False,max_length=50)
     name=models.CharField(max_length=50,null=False)
     sex = models.IntegerField(null=True)
     description=models.TextField(null=True)
-    store_id=models.ForeignKey(Stores, on_delete=models.SET_NULL, null=True)
-    category_id=models.ForeignKey(Categories, on_delete=models.SET_NULL, null=True)
+    store_id=models.ForeignKey(Store, on_delete=models.SET_NULL, null=True)
+    category_id=models.ForeignKey(Categorie, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
         
-class Sizes(models.Model):
+class Size(models.Model):
     id = models.BigAutoField(primary_key=True)
     size= models.IntegerField()
     quantity = models.IntegerField(null=True)
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True,blank=True,related_name='sizes')
+    product_id = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True,blank=True,related_name='sizes')
 
     def __str__(self):
         return self.product_id.name +"-"+ str(self.size)
 
-class Evaluates(models.Model):
+class Evaluate(models.Model):
     id = models.BigAutoField(primary_key=True)
     rate=models.FloatField()
     description=models.TextField(null=True)
-    user_id=models.ForeignKey(Users, on_delete=models.SET_NULL, null=True)
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+    user_id=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    product_id = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 
-class Prices(models.Model):
+class Price(models.Model):
     id = models.BigAutoField(primary_key=True)
     price=models.FloatField(null=True)
     sale=models.FloatField(null=True)
     status=models.BooleanField(null=True)
     datetime_create=models.DateTimeField(null=True)
     price_total=models.FloatField(null=True)
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True,blank=True,related_name='prices')
+    product_id = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True,blank=True,related_name='prices')
 
 
 
-class Photo_products(models.Model):
+class Photo_product(models.Model):
     id = models.BigAutoField(primary_key=True)
     name=models.CharField(max_length=50,null=True)
     data=models.ImageField()
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True,blank=True,related_name='photo_products')
+    product_id = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True,blank=True,related_name='photo_products')
 
     fields = ['data']

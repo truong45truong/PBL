@@ -5,5 +5,5 @@ from django.conf import settings
 urlpatterns = [
     path('<slug:slug>',views.productPage,name='product'),
     path('<slug:slug>/<slug:slugproduct>/',views.productDetail,name='productdetail'),
-    path('checkout/productnew',views.productNewPage,name='productnew'),
+    path('productnew/',views.productNewPage,name='productnew'),
 ]

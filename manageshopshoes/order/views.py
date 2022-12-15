@@ -1,9 +1,8 @@
-from itertools import product
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import Orders, Payments, Detail_orders
-from product.models import Products, Photo_products
-from login.models import Customers, Users, Stores
+from .models import Order, Detail_order
+from product.models import Product
+from login.models import Customer, User
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import HttpResponse
 from django.template.defaultfilters import slugify
@@ -15,6 +14,21 @@ import string
 
 
 def shoppingCartPage(request):
+
+    @login_required
+    def getProductOfUser(request, data):
+        current_user = request.user
+        if current_user.is_authenticated:
+            user = User.objects.get(username=current_user)
+            customer = Customer.objects.filter(users__username=user)
+            product_cart_user = Order.objects.filter(customer_id=customer[0], detail_orders__isnull=False).values(
+                'detail_orders__product_id__slug', 'detail_orders__quantity'
+            )
+            for item in product_cart_user:
+                data.append({
+                    'slug': item['detail_orders__product_id__slug'],
+                    'quantity': item['detail_orders__quantity']
+                })
 
     def handleDuplicateProducts(data):
         dir = dict()
@@ -30,7 +44,7 @@ def shoppingCartPage(request):
         list_product = []
         total_price = 0
         for i in data.keys():
-            item = Products.objects.filter(
+            item = Product.objects.filter(
                 prices__isnull=False, photo_products__isnull=False, slug=i).values(
                 'name', 'slug', 'sex', 'prices__price', 'prices__sale',
                 'photo_products__name', 'prices__price_total', 'category_id__logo'
@@ -51,20 +65,6 @@ def shoppingCartPage(request):
                 int(data[i])*float(item[0]['prices__price_total'])
         return total_price, list_product
 
-    @login_required
-    def getProductOfUser(request, data):
-        current_user = request.user
-        if current_user.is_authenticated:
-            user = Users.objects.get(username=current_user)
-            customer = Customers.objects.filter(users__username=user)
-            product_cart_user = Orders.objects.filter(customer_id=customer[0], detail_orders__isnull=False).values(
-                'detail_orders__product_id__slug', 'detail_orders__quantity'
-            )
-            for item in product_cart_user:
-                data.append({
-                    'slug': item['detail_orders__product_id__slug'],
-                    'quantity': item['detail_orders__quantity']
-                })
     try:
         data = request.session['cart']
     except Exception:
@@ -80,13 +80,10 @@ def add_to_cart(request):
     def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
-    data = json.loads(request.body.decode('utf-8'))
-    product = Products.objects.get(slug=data['slug'])
-
     def add_with_account(request):
-        user = Users.objects.get(username=request.user)
+        user = User.objects.get(username=request.user)
         customer = user.customer_id
-        order = Orders(
+        order = Order(
             name=slugify(""+customer.name+data['slug']+id_generator()),
             datetime=datetime.datetime.now(),
             receiver=customer.name,
@@ -97,7 +94,7 @@ def add_to_cart(request):
         )
         order.save()
         for size in data['sizes']:
-            detail_order = Detail_orders(
+            detail_order = Detail_order(
                 status=False, quantity=size['quantity'], product_id=product, order_id=order)
             detail_order.save()
 
@@ -117,6 +114,9 @@ def add_to_cart(request):
             data_cart.append(item_cart)
         request.session['cart'] = data_cart
         print(data_cart)
+    
+    data = json.loads(request.body.decode('utf-8'))
+    product = Product.objects.get(slug=data['slug'])
     if request.user.is_authenticated:
         add_with_account(request)
     else:

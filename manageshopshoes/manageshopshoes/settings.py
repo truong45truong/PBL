@@ -40,14 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'login.apps.LoginConfig',
     'home.apps.HomeConfig',
+    'payment.apps.PaymentConfig',
     'product.apps.ProductConfig',
     'order.apps.OrderConfig',
     'rest_framework',
-    'django_template_maths',
-    'mptt',
+    'livereload',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -66,6 +68,7 @@ TEMPLATES = [
         'DIRS': [
                     BASE_DIR / 'templates',
                     '/home/templates',
+                    BASE_DIR / 'product/templates',
                 ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -78,7 +81,7 @@ TEMPLATES = [
         },
     },
 ]
-AUTH_USER_MODEL = "login.Users"
+AUTH_USER_MODEL = "login.User"
 WSGI_APPLICATION = 'manageshopshoes.wsgi.application'
 
 
@@ -90,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'manageshopshoes',
         'USER':'root',
-        'PASSWORD':'',
+        'PASSWORD':'Sklearn100$',
         'HOST':'localhost',
         'PORT': '3306',
     }
@@ -129,7 +132,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
+CORS_ORIGIN_ALLOW_ALL = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm, PriceForm, PhotoProductForm
-from .models import Categories, Photo_products, Products, Prices, Sizes
+from .models import Categorie, Photo_product, Product, Price, Size
 from django.core.paginator import Paginator
 from .filters import ProductFilter
 from django.template.defaultfilters import slugify
@@ -13,8 +13,8 @@ import string
 import json
 # path save photo
 
-path_upload = "C:/Users/DELL/OneDrive/Máy tính/8-2022/djangotrain/PBL/manageshopshoes/media_upload/photos"
-path_root = "C:/Users/DELL/OneDrive/Máy tính/8-2022/djangotrain/PBL/manageshopshoes/media/photos"
+path_upload = "/home/truobg/Tài liệu/dulieu/Congty/8-2022/djangotrain/PBL/manageshopshoes/media_upload/photos"
+path_root = "/home/truobg/Tài liệu/dulieu/Congty/8-2022/djangotrain/PBL/manageshopshoes/media/photos"
 # Create your views here.
 
 
@@ -26,7 +26,7 @@ def productPage(request, slug):
     sort_price = request.GET.get('sortselect')
     topsale = request.GET.get('topsale')
     latest = request.GET.get('latest')
-    list_product = Products.objects.filter(
+    list_product = Product.objects.filter(
         prices__isnull=False, photo_products__isnull=False, category_id__slug=slug).values(
         'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo')
     if topsale:
@@ -64,7 +64,7 @@ def productPage(request, slug):
     paginator = Paginator(filtered_qs, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'products.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) })
+    return render(request, 'Product.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) })
 
 
 def productDetail(request, slug, slugproduct):
@@ -90,7 +90,7 @@ def productNewPage(request):
             category = form_product.cleaned_data['category_id']
             while True:
                 try:
-                    product = Products(name=name, sex=sex, description=description,
+                    product = Product(name=name, sex=sex, description=description,
                                        category_id=category, slug=slugify(
                                            name) + "-" + id_generator()
                                        )
@@ -100,13 +100,13 @@ def productNewPage(request):
             product.save()
             for i in range(35, 45):
                 quantity = request.POST.get('sizevalue_' + str(i))
-                Sizes(size=i, quantity=quantity, product_id=product).save()
+                Size(size=i, quantity=quantity, product_id=product).save()
 
         if form_price.is_valid():
             price = form_price.cleaned_data['price']
             sale = form_price.cleaned_data['sale']
-            price_product = Prices(price=price, sale=sale, price_total=(100-float(sale))*float(price)/100,
-                                   product_id=Products(id=product.id), datetime_create=datetime.datetime.now()
+            price_product = Price(price=price, sale=sale, price_total=(100-float(sale))*float(price)/100,
+                                   product_id=Product(id=product.id), datetime_create=datetime.datetime.now()
                                    )
     
 
@@ -115,7 +115,7 @@ def productNewPage(request):
             upload(request.FILES['data'], product.id)
             handleImageUpload(request.FILES['data'], product.id)
 
-    return render(request, 'productnew.html', {'form_product': form_product, 'form_price': form_price, 'form_photoproduct': form_photoproduct})
+    return render(request, 'Productnew.html', {'form_product': form_product, 'form_price': form_price, 'form_photoproduct': form_photoproduct})
 
 
 def upload(f, product):
@@ -135,6 +135,6 @@ def handleImageUpload(f, product):
     nameFile = str(product) + '.' + f.name.split('.')[-1]
     shutil.move(path_upload + '/products' + '/' + nameFile,
                 path_root + '/products' + '/' + nameFile)
-    photo_product = Photo_products(
-        name=nameFile, data=nameFile, product_id=Products(id=product))
+    photo_product = Photo_product(
+        name=nameFile, data=nameFile, product_id=Product(id=product))
     photo_product.save()

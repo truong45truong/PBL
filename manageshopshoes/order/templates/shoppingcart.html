@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% block style %}
 {% load static %}
-    <link rel="stylesheet" href="{% static 'css/shoppingcartstyles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/shoppingcartstyle.css' %}" />
 {% endblock %}
 {% block content %}
 <main>
@@ -43,8 +43,7 @@
                                     onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <input class="quantity-product" id="form1" min="0" name="quantity" value="{{i.quantity}}" type="number"
-                                    class="form-control form-control-sm" />
+                                <input class="quantity-product form-control form-control-sm" id="form1" min="0" name="quantity" value="{{i.quantity}}" type="number"/>
                                 <button class="btn btn-link px-2"
                                     onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                                     <i class="fas fa-plus"></i>

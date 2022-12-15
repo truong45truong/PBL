@@ -1,15 +1,15 @@
 from django.db import models
-from product.models import Products
-from login.models import Customers
+from product.models import Product
+from login.models import Customer
 # Create your models here.
 
-class Transports(models.Model):
+class Transport(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50)
     logo = models.ImageField(null=True)
     price = models.FloatField(null=True)
 
-class Orders(models.Model):
+class Order(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50)
     datetime = models.DateTimeField()
@@ -18,20 +18,13 @@ class Orders(models.Model):
     phone_receiver = models.CharField(max_length=10,null=True)
     status = models.BooleanField()
     total_price = models.FloatField(null=True)
-    customer_id = models.ForeignKey(Customers, on_delete=models.SET_NULL, null=True)
-    transport_id = models.ForeignKey(Transports, on_delete=models.SET_NULL, null=True)
+    customer_id = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    transport_id = models.ForeignKey(Transport, on_delete=models.SET_NULL, null=True)
 
-class Payments(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    type = models.IntegerField()
-    allowed = models.BooleanField()
-    datetime = models.DateTimeField()
-    order_id = models.ForeignKey(Orders, on_delete=models.SET_NULL, null=True,blank=True,related_name='detailorders')
-
-class Detail_orders(models.Model):
+class Detail_order(models.Model):
     id = models.BigAutoField(primary_key=True)
     status = models.BooleanField()
     quantity = models.IntegerField()
-    order_id = models.ForeignKey(Orders, on_delete=models.SET_NULL, null=True)
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+    order_id = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True,related_name='detail_orders')
+    product_id = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 
