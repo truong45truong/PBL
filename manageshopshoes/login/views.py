@@ -55,7 +55,9 @@ def loginPage(request):
 
 
 def registerPage(request):
+    formImage = ImageStoreForm()
     if request.method == 'POST':
+        formImage = ImageStoreForm(request.POST,request.FILES)
         username = request.POST.get('username').lower()
         password = request.POST.get('password')
         name = request.POST.get('name')
@@ -64,6 +66,7 @@ def registerPage(request):
         phone = request.POST.get('phone')
         address = request.POST.get('address')
         birthday = request.POST.get('birthday')
+        
         if (password != confirm_password):
             messages.success(request, 'mật khẩu không trùng!')
             return render(request, 'register.html')
@@ -72,6 +75,8 @@ def registerPage(request):
         except:
             user=User(name=name,username=username,phone=phone,email=email)
             user.password =make_password(password)
+            if formImage.is_valid():
+                user.avatar = str(user.id)+'avt'+".png"
             customer = Customer(name=name, address=address,
                                 email=email, birthday=birthday)
             customer.save()
@@ -86,7 +91,7 @@ def registerPage(request):
 
         if user is not None:
             messages.success(request, 'Account already exists!')
-    return render(request, 'register.html')
+    return render(request, 'register.html',{'formImage':formImage})
 
 @login_required
 def registerStorePage(request):
