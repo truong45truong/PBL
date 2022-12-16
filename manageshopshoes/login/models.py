@@ -12,7 +12,7 @@ class Store(models.Model):
     phone = models.CharField(max_length=10)
     fax = models.CharField(max_length=50)
     email = models.EmailField()
-    logo = models.ImageField(null=True)
+    logo = models.ImageField(null=True,blank=True)
 
 class Customer(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -30,7 +30,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=10)
     avatar = models.ImageField(null=True, default="avatar.svg")
     password = models.CharField(max_length=200)
-    store_id = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True)
+    store_id = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True,related_name='users')
     customer_id = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True,related_name='users')
 
     USERNAME_FIELD = 'username'
