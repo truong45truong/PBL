@@ -130,7 +130,8 @@
             </div>
         </div>
         <div class="row">
-            <h1 class="my-5 mx-3"> <i class="icon-new-product fa-sharp fa-solid fa-arrow-right fs-2"></i><i class="mx-2">Product</i></h1>
+            <h1 class="my-5 mx-3"> <i class="icon-new-product fa-sharp fa-solid fa-arrow-right fs-2"></i><i
+                    class="mx-2">Product</i></h1>
             {% csrf_token %}
             {% for item in page_obj %}
             <div class="col-md-2 col-6 mb-2">
@@ -167,7 +168,7 @@
                         </p>
                         <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#exampleModal{{item.slug}}">
-                            <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
+                            <i class="fa-solid fa-cart-shopping me-2"></i>More</button>
                     </div>
                 </div>
             </div>

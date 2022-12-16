@@ -2,15 +2,25 @@
     display: grid;
     place-items: center;
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   .grid {
     inline-size: 90%;
     margin-inline: auto;
     max-inline-size: 20rem;
   }
+<<<<<<< HEAD
 
   /* helpers/hidden.css */
 
+=======
+  
+  /* helpers/hidden.css */
+  
+>>>>>>> refs/remotes/origin/main
   .hidden {
     border: 0;
     clip: rect(0 0 0 0);
@@ -21,6 +31,7 @@
     position: absolute;
     width: 1px;
   }
+<<<<<<< HEAD
 
   /* helpers/icon.css */
 
@@ -32,6 +43,19 @@
     display: none;
   }
 
+=======
+  
+  /* helpers/icon.css */
+  
+  :root {
+    --iconFill: var(--baseColor);
+  }
+  
+  .icons {
+    display: none;
+  }
+  
+>>>>>>> refs/remotes/origin/main
   .icon {
     block-size: 1em;
     display: inline-block;
@@ -39,9 +63,15 @@
     inline-size: 1em;
     vertical-align: middle;
   }
+<<<<<<< HEAD
 
   /* layout/base.css */
 
+=======
+  
+  /* layout/base.css */
+  
+>>>>>>> refs/remotes/origin/main
   :root {
     --htmlFontSize: 100%;
     --bodyColor: var(--baseColor);
@@ -51,16 +81,28 @@
     --bodyFontWeight: 400;
     --bodyLineHeight: 1.5;
   }
+<<<<<<< HEAD
 
   * {
     box-sizing: inherit;
   }
 
+=======
+  
+  * {
+    box-sizing: inherit;
+  }
+  
+>>>>>>> refs/remotes/origin/main
   html {
     box-sizing: border-box;
     font-size: var(--htmlFontSize);
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   body {
     background-color: var(--bodyBackgroundColor);
     color: var(--bodyColor);
@@ -71,6 +113,7 @@
     margin: 0;
     min-block-size: 100vh;
   }
+<<<<<<< HEAD
 
   /* modules/anchor.css */
 
@@ -78,16 +121,30 @@
     --anchorColor: #eee;
   }
 
+=======
+  
+  /* modules/anchor.css */
+  
+  :root {
+    --anchorColor: #eee;
+  }
+  
+>>>>>>> refs/remotes/origin/main
   a {
     color: var(--anchorColor);
     outline: 0;
     text-decoration: none;
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   a:focus,
   a:hover {
     text-decoration: underline;
   }
+<<<<<<< HEAD
 
   /* modules/form.css */
 
@@ -95,6 +152,15 @@
     --formGap: 0.875rem;
   }
 
+=======
+  
+  /* modules/form.css */
+  
+  :root {
+    --formGap: 0.875rem;
+  }
+  
+>>>>>>> refs/remotes/origin/main
   input {
     background-image: none;
     border: 0;
@@ -105,21 +171,34 @@
     padding: 0;
     transition: background-color 0.3s;
   }
+<<<<<<< HEAD
 
   input[type="submit"] {
     cursor: pointer;
   }
 
+=======
+  
+  input[type="submit"] {
+    cursor: pointer;
+  }
+  
+>>>>>>> refs/remotes/origin/main
   .form {
     display: grid;
     gap: var(--formGap);
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   .form input[type="password"],
   .form input[type="text"],
   .form input[type="submit"] {
     inline-size: 100%;
   }
+<<<<<<< HEAD
 
   .form__field {
     display: flex;
@@ -131,23 +210,50 @@
 
   /* modules/login.css */
 
+=======
+  
+  .form__field {
+    display: flex;
+  }
+  
+  .form__input {
+    flex: 1;
+  }
+  
+  /* modules/login.css */
+  
+>>>>>>> refs/remotes/origin/main
   :root {
     --loginBorderRadus: 0.25rem;
     --loginColor:black;
 
     --loginInputHoverBackgroundColor: #434a52;
+<<<<<<< HEAD
 
     --loginLabelBackgroundColor: #363b41;
 
+=======
+  
+    --loginLabelBackgroundColor: #363b41;
+  
+>>>>>>> refs/remotes/origin/main
     --loginSubmitBackgroundColor: #ea4c88;
     --loginSubmitColor: #eee;
     --loginSubmitHoverBackgroundColor: #d44179;
   }
+<<<<<<< HEAD
 
   .login {
     color: var(--loginColor);
   }
 
+=======
+  
+  .login {
+    color: var(--loginColor);
+  }
+  
+>>>>>>> refs/remotes/origin/main
   .login label,
   .login input[type="text"],
   .login input[type="password"],
@@ -156,14 +262,22 @@
     border-color: #363b41;
     padding: 1rem;
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   .login label {
     background-color: var(--loginLabelBackgroundColor);
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
     padding-inline: 1.25rem;
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   .login input[type="password"],
   .login input[type="text"] {
     background-color: var(--loginInputBackgroundColor);
@@ -172,7 +286,11 @@
     border-top-left-radius: 0;
 
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   .login input[type="password"]:focus,
   .login input[type="password"]:hover,
   .login input[type="text"]:focus,
@@ -180,18 +298,27 @@
     background-color: rgb(210, 205, 205);
     color:black'
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   .login input[type="submit"] {
     background-color: var(--loginSubmitBackgroundColor);
     color: var(--loginSubmitColor);
     font-weight: 700;
     text-transform: uppercase;
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> refs/remotes/origin/main
   .login input[type="submit"]:focus,
   .login input[type="submit"]:hover {
     background-color: var(--loginSubmitHoverBackgroundColor);
   }
+<<<<<<< HEAD
 
   /* modules/text.css */
 
@@ -199,6 +326,15 @@
     margin-block: 1.5rem;
   }
 
+=======
+  
+  /* modules/text.css */
+  
+  p {
+    margin-block: 1.5rem;
+  }
+  
+>>>>>>> refs/remotes/origin/main
   .text--center {
     text-align: center;
   }

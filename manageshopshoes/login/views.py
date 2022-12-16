@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserForm,ImageStoreForm
 from .models import User,Customer,Store
@@ -13,6 +13,8 @@ path_upload = "/home/truobg/Tài liệu/dulieu/Congty/8-2022/djangotrain/PBL/man
 path_root = "/home/truobg/Tài liệu/dulieu/Congty/8-2022/djangotrain/PBL/manageshopshoes/media/photos"
 
 # Create your views here.
+
+
 class CustomBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
@@ -22,31 +24,36 @@ class CustomBackend(ModelBackend):
         except Exception as e:
             return None
 
+
 @login_required
 def logoutUser(request):
     logout(request)
     return redirect('home')
+
+
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
     form = UserForm()
     if request.method == 'POST':
-        form= UserForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
-            username=form.cleaned_data['username']
-            password=form.cleaned_data['password']
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
         try:
-            user = authenticate(request,username=username,password=password)
+            user = authenticate(request, username=username, password=password)
         except Exception as e:
-            user=None
+            user = None
         if user is not None:
-            login(request,user,backend='django.contrib.auth.backends.ModelBackend')
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         else:
-            messages.success(request,'Login failed')
+            messages.success(request, 'Login failed')
             return render(request, "login.html")
 
-    return render(request,'login.html',{'form':form})
+    return render(request, 'login.html', {'form': form})
+
+
 def registerPage(request):
     if request.method == 'POST':
         username = request.POST.get('username').lower()
@@ -73,12 +80,13 @@ def registerPage(request):
                         email=email, customer_id=customer)
             user.password = make_password(password)
             user.save()
-            messages.success(request,'Register success!')
+
+            messages.success(request, 'Register success!')
             return redirect('login')
 
         if user is not None:
-            messages.success(request,'Account already exists!')
-    return render(request,'register.html')
+            messages.success(request, 'Account already exists!')
+    return render(request, 'register.html')
 
 @login_required
 def registerStorePage(request):

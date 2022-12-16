@@ -1,5 +1,5 @@
 from django.forms import ModelForm,Form
-from login.models import User
+from login.models import User,Store
 from django import forms
 
 
