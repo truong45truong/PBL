@@ -33,7 +33,7 @@ def shoppingCartPage(request):
     def handleDuplicateProducts(data):
         dir = dict()
         for item in data:
-            if item['slug'] in dir.keys():
+            if item['slug'] in dir:
                 dir[item['slug']] = int(
                     dir[item['slug']]) + int(item['quantity'])
             else:
@@ -72,8 +72,10 @@ def shoppingCartPage(request):
     getProductOfUser(request, data)
     dir_product_cart = handleDuplicateProducts(data)
     total_price, products = processingSynthesisProduct(dir_product_cart)
-    return render(request, 'shoppingcart.html', {'product': products, 'total_price': total_price})
-
+    if (request.user.is_anonymous is False):
+        return render(request, 'shoppingcart.html', {'product': products, 'total_price': total_price,'current' : request.user})
+    else :
+        return render(request, 'shoppingcart.html', {'product': products, 'total_price': total_price})
 
 def add_to_cart(request):
 

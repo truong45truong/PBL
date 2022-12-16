@@ -41,6 +41,14 @@
         <label for="login__password"><i class="fa-solid fa-phone"></i></label>
         <input id="login__password" type="text" name="phone" class="form__input" placeholder="phone" required>
       </div>
+      <div class="form__field">
+        <label for="login__password"><i class="fa-solid fa-location-dot"></i></label>
+        <input id="login__password" type="text" name="address" class="form__input" placeholder="Address" required>
+      </div>
+      <div class="form__field">
+        <label for="login__password"><i class="fa-solid fa-calendar-days"></i></label>
+        <input id="login__password" type="date" name="birthday" class="form__input" placeholder="Birthday" required>
+      </div>
       {% for message in messages %}
 				<p id ='messages' style="color:red;" >{{message}}</p>
 			{%endfor%}

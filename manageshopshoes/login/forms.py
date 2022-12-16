@@ -12,3 +12,5 @@ class RegisterForm(ModelForm):
     username = forms.CharField(label='username')
     password1 = forms.CharField(label='password')
     password2 = forms.CharField(label='confirmpassword')
+class ImageStoreForm(Form):
+    data = forms.ImageField()
