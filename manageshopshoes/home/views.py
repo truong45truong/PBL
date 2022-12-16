@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from product.filters import ProductFilter
 def homePage(request):
-    if (request.user.is_anonymous == False):
+    if (request.user.is_anonymous is False):
         return render(request,'home.html',{ 'current' :request.user })
     else :
         return render(request,'home.html',{ 'current' : False })
