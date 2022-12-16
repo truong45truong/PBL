@@ -1,4 +1,7 @@
+{% block style %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+{% endblock %}
 <header>
     <div class="top">
       <div class="container">
@@ -60,18 +63,41 @@
               <li class="nav-item">
                 <a href="{% url 'home' %}">Home</a>
               </li>
-              <li class="nav-item">
-                <a href="#">Introduce</a>
-              </li>
-              <li class="nav-item">
-                <a href="#">Products</a>
-              </li>
-              <li class="nav-item">
-                <a href="#">News</a>
-              </li>
-              <li class="nav-item">
-                <a href="#">Contact</a>
-              </li>
+              <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">Category</a>
+              {% load mptt_tags %}
+              <ul class="root dropdown-menu">
+                {% recursetree list_category %}
+                <li class="dropend">
+                  <a 
+                  {% if not node.is_leaf_node %}
+                  class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown"
+                  {% else %}
+                  class="dropdown-item"
+                  {% endif %}
+                  href="">
+                    {{ node.name }}
+                  </a>
+                  {% if not node.is_leaf_node %}
+                  <ul class="children dropdown-menu">
+                    {% comment %} <li><a class="dropdown-item" href="account-orders.html">Orders History</a></li> {% endcomment %}
+                    {% for subcate in node.get_children %}
+                    <li>
+                      <a class="dropdown-item" href="{% url 'product' slug=subcate.slug %}">{{subcate.name}}</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </li>
+                {% endrecursetree %}
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Introduce</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
             </ul>
             <div id="bar-menu">
               <i class="fa-solid fa-bars"></i>

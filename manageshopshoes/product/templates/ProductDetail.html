@@ -9,6 +9,8 @@
   <main>
     <div class="container">
         <div class="row py-5 g-5">
+              {% comment %} {% for pro in product %} {% endcomment %}
+              {% load humanize %}
             <div id="carouselExampleControls" class="carousel col-12 col-lg-6" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -36,45 +38,28 @@
                 </button>
             </div>
             <div class="col-12 col-lg-6">
-                <h2 id="name-product">Stan Smith Shoe</h2>
-                <small class="sex-product">Women Originals</small> 
-                <h5 class="my-4"><span id="price">2.500.000VND</span></h5>
+                <h2 id="name-product">{{product.name}}</h2>
+                <small class="sex-product">{{product.description}}</small> 
+                <h5 class="my-4">
+                {% if priceProduct.sale == 0.0 %}
+                          {{priceProduct.price|intcomma}}VND
+                        {% else %}
+                          <span class="small"><del>{{priceProduct.price|intcomma}}VND</del></span>
+                          &nbsp {{priceProduct.price_total|intcomma}}VND
+                          &nbsp<span class="">{{priceProduct.sale|intcomma}}</span>
+                        {% endif %}</h5>
                 <div class="row g-3 align-items-center">
                   <label for="selectSize" class="col-auto me-4">Size:</label>
                   <!-- <br> -->
-                  <div class="flex-wrap col-auto" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
-                    <label class="btn btn-outline-secondary" for="option1">35</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option2">36</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option3">37</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option4" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option4">38</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option5" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option5">39</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option6" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option6">40</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option7" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option7">41</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option8" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option8">42</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option9" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option9">43</label>
-                    
-                    <input type="radio" class="btn-check" name="options" id="option10" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="option10">44</label>
+                  {% for size in list_size %}
+                  <div class="flex-wrap col-auto" role="group" aria-label="Basic radio toggle button group" data-bs-target="#size{{size.size}}>
+                    <input type="radio" class="btn-check" name="options" id="option{{size}}" autocomplete="off">
+                    <label class="btn btn-outline-secondary" for="option{{size}}">{{size.size}}</label>
                   </div>
+                  {% endfor %}
+                    
+                    
                 </div>
-                <br>
                 <br>
                 <!-- <label for="quantityProduct" class="text-muted">Quantity:&nbsp;&nbsp;</label>
                 <input type="number" value="0" size="1" min="0" max="10" id="quantity"/> -->
@@ -89,12 +74,14 @@
                         <button type="button" class="btn btn-outline-secondary"><i class="fas fa-plus"></i></button>
                       </div>
                     </div>
-                    <div class="col-auto">
-                        <span id="passwordHelpInline" class="form-text">
-                            360 pieces available
+                    {% for size in list_size %}
+                    <div class="col-auto hidden" id="size{{size.size}}">
+                        <span id="quantityAvail" class="form-text">
+                            {{size.quantity}} pieces available
                         </span>
                     </div>
-                  </div>
+                    {% endfor %}
+                </div>
                 <br>
                 <br>
                 <div class="d-grid my-4">
@@ -109,7 +96,7 @@
                     <div class="infoShop">
                         <a href="" class="me-3"><img src="{% static 'image/banner1.jpg' %}" class="UserImg img-fluid" alt="..."></a>
                         <div class="flex-column justify-content-between">
-                          <span class="nameShop">UserName</span>
+                          <span class="nameShop">{{product.store_id__name}}</span>
                         </div>
                     </div>
                 </div>
@@ -118,7 +105,7 @@
             <div class="card form-control">
                 <div class="card-body">
                     <h5 class="card-title">Description</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">{{pro.description}}</p>
                 </div>
             </div>
 
@@ -161,98 +148,42 @@
                 <div class="carousel-inner">
                   <div class="carousel-item active">
                     <div class="row">
-                      <a role="button" href="./ProductDetail.html" class="col-md-3 col-6 mb-2 btn">
-                        <div class="content-col">
-                          <img src="{% static 'image/sp1.png' %}">
-                          <div class="ribbon new">
-                            <div class="theribbon">NEW</div>
-                          </div>
+                      {% for pro in products %}
+                      {% load humanize %} 
+                      <div class="col-md-3 col-5 mb-2 ">
+                        <div class="content-col justify-content-between">
+                          <a href="{% url 'productdetail' slug=pro.slug %}"><img src="{% static 'image/sp1.png' %}"></a>
+                          {% if pro.prices__sale > 0.0 %}
+                          <div class="ribbon sale">SALE&nbsp{{pro.prices__sale}}%</div>
+                          <p class="position-absolute price-value-product">{{pro.prices__price|intcomma}}VND</p>
+                          {% endif %}
                           <div class="text-center content-card">
-                            <h5 class="price"> 2.500.000đ</h5>
-                            <p class="name-product"> Stan Smith Shoe</p>
-                            <p class="sex-product">Women Originals</p>
-                            <button type="button">
+                            <p>{{pro.id}}</p>
+                            <p class="price">
+                              {{pro.prices__price|intcomma}}VND
+                            </p>
+                            <a href="" class="text-decoration-none"><p class="name-product">{{pro.name}}</p></a>
+                            {% if pro.sex == 0 %}
+                            <p class="sex-product">Men & Women</p>
+                            {% endif %}
+                            {% if pro.sex == 1 %}
+                            <p class="sex-product" id="sex-product-detail">Men</p>
+                            {% endif %}
+                            {% if pro.sex == 2 %}
+                            <p class="sex-product">Women</p>
+                            {% endif %}
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal{{pro.slug}}">
                               <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
-                          </div>
-                        </div>
-                      </a>
-                      <a role="button" href="" class="col-md-3 col-6 mb-2 btn">
-                        <div class="content-col">
-                          <img src="{% static 'image/sp2.png' %} ">
-                          <div class="ribbon sale">
-                            <div class="theribbon">SALE</div>
-                          </div>
-                          <div class="text-center content-card">
-                            <h5 class="price"> 2.500.000đ</h5>
-                            <p class="name-product"> Stan Smith Shoes</p>
-                            <p class="sex-product">Women Originals</p>
-                            <button type="button" class="btn btn-secondary">
-                              <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
-                          </div>
-                        </div>
-                      </a>
-                      <a role="button" href="" class="col-md-3 col-6 mb-2 btn">
-                        <div class="content-col">
-                          <img src="{% static 'image/sp3.png' %}">
-                          <div class="ribbon new">
-                            <div class="theribbon">NEW</div>
-                          </div>
-                          <div class="ribbon sale">
-                            <div class="theribbon">SALE</div>
-                          </div>
-                          <div class="text-center content-card">
-                            <h5 class="price"> 6.300.000đ</h5>
-                            <p class="name-product"> Yeezy boost 380</p>
-                            <p class="sex-product">Men Originals</p>
-                            <button type="button" class="btn btn-secondary">
-                              <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
-                          </div>
-                        </div>
-                      </a>
-                      <a role="button" href="" class="col-md-3 col-6 mb-2 btn">
-                        <div class="content-col">
-                          <img src="{% static 'image/sp4.png' %}">
-                          <div class="text-center content-card">
-                            <h5 class="price"> 2.500.000đ</h5>
-                            <p class="name-product"> Stan Smith Shoes</p>
-                            <p class="sex-product">Women Originals</p>
-                            <button type="button" class="btn btn-secondary">
-                              <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
-                          </div>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="carousel-item">
-                    <div class="row">
-                      <div class="col-md-3 col-6 mb-2">
-                        <div class="content-col">
-                          <img src="{% static 'image/sp5.png' %}">
-                          <div class="text-center content-card">
-                            <h5 class="price"> 2.800.000đ</h5>
-                            <p class="name-product"> Super Shoes</p>
-                            <p class="sex-product">Women Originals</p>
-                            <p class="state-product"> new </p>
-                            <button class="btn btn-dark">More</button>
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-3 col-6 mb-2">
-                        <div class="content-col">
-                          <img src="{% static 'image/sp6.png' %}">
-                          <div class="text-center content-card">
-                            <h5 class="price"> 3.600.000đ</h5>
-                            <p class="name-product">NMD-R1 Shoes</p>
-                            <p class="sex-product">Women Originals</p>
-                            <p class="state-product"> new </p>
-                            <button class="btn btn-dark">More</button>
-                          </div>
-                        </div>
-                      </div>
+                      {% endfor %}
+                      
                     </div>
                   </div>
                 </div>
             </div>
+              {% comment %} {% endfor %} {% endcomment %}
         </div>
     </div>
   </main>

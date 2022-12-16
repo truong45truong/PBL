@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm, PriceForm, PhotoProductForm
-from .models import Categorie, Photo_product, Product, Price, Size
+from .models import Categories, Photo_product, Product, Price, Size
+from login.models import Store
 from django.core.paginator import Paginator
 from .filters import ProductFilter
 from django.template.defaultfilters import slugify
@@ -13,28 +14,45 @@ import string
 import json
 # path save photo
 
-path_upload = "/home/truobg/Tài liệu/dulieu/Congty/8-2022/djangotrain/PBL/manageshopshoes/media_upload/photos"
-path_root = "/home/truobg/Tài liệu/dulieu/Congty/8-2022/djangotrain/PBL/manageshopshoes/media/photos"
+path_upload = "D:\TranTran\Ki 7\PBL-main\PBL\manageshopshoes\media_upload\photos"
+path_root = "D:\TranTran\Ki 7\PBL-main\PBL\manageshopshoes\media\photos"
 # Create your views here.
 
 
 def productPage(request, slug):
-
+    list_category=Categories.objects.all()
     sex = request.GET.get('sexselect')
-    category = request.GET.get('categoryselect')
+    minprice = request.GET.get('minprice')
+    maxprice = request.GET.get('maxprice')
+        
     limit = request.GET.get('limitselect')
-    sort_price = request.GET.get('sortselect')
-    topsale = request.GET.get('topsale')
-    latest = request.GET.get('latest')
-    list_product = Product.objects.filter(
-        prices__isnull=False, photo_products__isnull=False, category_id__slug=slug).values(
-        'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo')
-    if topsale:
-        pass
-    if latest:
-        pass
+    sortby = request.GET.get('sortby')
+    
+    name_arr = '-id'
+    if sortby == "lastest":
+        name_arr ='-id'
+    if sortby == "highrate":
+        name_arr = 'id'
+    if sortby == "lowtohigh":
+        name_arr = 'prices__price_total'
+    if sortby == "hightolow":
+        name_arr = '-prices__price_total'
+        
+    if slug=='0':
+        list_product = Product.objects.filter(
+        # prices__isnull=False, photo_products__isnull=False, category_id__slug=slug).values(
+        prices__isnull=False).values(
+        'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo').order_by(name_arr)
+        filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
+    else:
+        list_product = Product.objects.filter(
+        # prices__isnull=False, photo_products__isnull=False, category_id__slug=slug).values(
+        prices__isnull=False, category_id__slug=slug).values(
+        'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo').order_by(name_arr)
+        filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
+    
     if sex:
-        list_product = list_product.filter(sex=sex)
+        list_product = list_product.filter(sex=sex).order_by(name_arr)
         filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
     if limit:
         list_limit = str(limit).split("-")
@@ -43,32 +61,53 @@ def productPage(request, slug):
         except:
             low = 0
         try:
-            hight = int(list_limit[1])
+            high = int(list_limit[1])
         except:
-            hight = 0
+            high = 0
         if low != 0:
             list_product = list_product.filter(prices__price_total__gte=low)
-        if hight != 0:
-            list_product = list_product.filter(prices__price_total__lte=hight)
+        if high != 0:
+            list_product = list_product.filter(prices__price_total__lte=high)
         filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
-    if category:
-        category = list_product.filter(category_id__id=category)
-    if sort_price:
-        if sort_price == "low":
-            list_product = list_product.order_by('prices__price_total')
-        if sort_price == "hight":
-            list_product = list_product.order_by('-prices__price_total')
+        
+    if sex is None and limit is None and sortby is None:
         filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
-    if sex is None and category is None and limit is None and sort_price is None:
-        filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
-    paginator = Paginator(filtered_qs, 6)
-    page_number = request.GET.get('page')
+        
+    paginator = Paginator(filtered_qs, 4)
+    page_number = request.GET.get('page') if request.GET.get('page') != None else '1'
     page_obj = paginator.get_page(page_number)
-    return render(request, 'Product.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) })
-
-
-def productDetail(request, slug, slugproduct):
-    return render(request, 'ProductDetail.html')
+    nums = "a" * page_obj.paginator.num_pages
+    return render(request, 'products.html', 
+                  {'products': page_obj, 'page': int(page_number), 'list_category':list_category, 'nums':nums,
+                #    'product_all_cat': product_all_cat,
+                    # 'product':product, 'list_size':list_size
+                    'sortby':sortby
+                   })
+    
+def productDetail(request, slug):
+    list_category = Categories.objects.all()
+    
+    product = Product.objects.get(prices__isnull=False, slug=slug)
+    priceProduct = Price.objects.get(product_id__slug=slug)
+    storeInfo = Store.objects.get(id=product.id)
+    list_size = Size.objects.filter(product_id__slug=slug)
+    
+    
+    list_product = Product.objects.filter(
+        # prices__isnull=False, photo_products__isnull=False, category_id__slug=slug).values(
+    prices__isnull=False).values(
+    'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo').order_by('id')
+    filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
+    
+    paginator = Paginator(filtered_qs, 4)
+    page_number = request.GET.get('page') if request.GET.get('page') != None else '1'
+    page_obj = paginator.get_page(page_number)
+    nums = "a" * page_obj.paginator.num_pages
+    
+    return render(request, 'ProductDetail.html',
+                  {'list_category':list_category, 'product':product, 'list_size':list_size,
+                   'page': int(page_number), 'products': page_obj, 'priceProduct':priceProduct, 'storeInfo':storeInfo,
+                  })
 
 
 def productNewPage(request):

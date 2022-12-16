@@ -1,13 +1,14 @@
 from django.db import models
 from login.models import Store,User
+from mptt.models import MPTTModel, TreeForeignKey
 # Create your models here.
 
-class Categorie(models.Model):
+class Categories(MPTTModel):
     id = models.BigAutoField(primary_key=True)
-    slug = models.CharField(null=False,max_length=50)
+    slug = models.CharField(null=False,max_length=50,unique=True)
     name=models.CharField(max_length=50)
     logo=models.ImageField(null=True)
-    path=models.TextField(null=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
     def __str__(self):
         return self.name
@@ -18,7 +19,7 @@ class Product(models.Model):
     sex = models.IntegerField(null=True)
     description=models.TextField(null=True)
     store_id=models.ForeignKey(Store, on_delete=models.SET_NULL, null=True)
-    category_id=models.ForeignKey(Categorie, on_delete=models.SET_NULL, null=True)
+    category_id=models.ForeignKey(Categories, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
