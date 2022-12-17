@@ -12,27 +12,6 @@
 </head>
 <body>
 
-  {% comment %} <div class="grid">
-
-    <form action="{% url 'login'%}" method="POST" class="form login">
-      {% csrf_token %}
-      {{form.username}}
-      {{form.password}}
-      {% for message in messages %}
-								<p id ='messages' style="color:red;" >{{message}}</p>
-							{%endfor%}
-      <div class="form__field">
-        <input type="submit" value="Sign In">
-      </div>
-
-    </form>
-
-    <p class="text--center">Not a member? <a href="{% url 'register'%}">Sign up now</a> <svg class="icon">
-        <use xlink:href="#icon-arrow-right"></use>
-      </svg></p>
-
-  </div> {% endcomment %}
-
   <section class="vh-100 gradient-custom">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
