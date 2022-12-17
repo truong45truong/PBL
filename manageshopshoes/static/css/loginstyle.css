@@ -227,6 +227,7 @@ p {
 
   .form-group {
     position: relative;
+    margin-bottom: 1rem;
 }
 .form-group .icon {
   position: absolute;
