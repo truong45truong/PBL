@@ -11,9 +11,9 @@
   <link rel="stylesheet" href ="{% static 'css/loginstyle.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet"/> 
 </head>
-<body class="align">
+<body>
 
-  <div class="grid">
+  {% comment %} <div class="grid">
 
     <form action="{% url 'register'%}" method="POST" class="form login">
       {% csrf_token %}
@@ -68,7 +68,80 @@
     <symbol id="icon-user" viewBox="0 0 1792 1792">
       <path d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z" />
     </symbol>
-  </svg>
+  </svg> {% endcomment %}
+
+  <section class="vh-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+
+            <div class="mt-md-4 pb-2">
+            
+              <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
+              <form action="{% url 'register'%}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user"></span></div>
+                  <input type="text" id="login__username" class="form-control" placeholder="Username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-lock"></span></div>
+                  <input type="password" id="login__password" class="form-control" placeholder="Password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-lock"></span></div>
+                  <input type="password" id="login__password" class="form-control" placeholder="Confirm password" name="confirmpassword" required>
+                </div>
+
+                <div class="form-group">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user"></span></div>
+                  <input type="text" id="login__username" class="form-control" placeholder="Name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-envelope"></span></div>
+                  <input type="text" id="login__email" class="form-control" placeholder="Email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-phone"></span></div>
+                  <input type="text" id="login__phone" class="form-control" placeholder="Phone" name="phone" required>
+                </div>
+
+
+
+                {% for message in messages %}
+                  <p id ='messages' style="color:red;" >{{message}}</p>
+                {%endfor%}
+
+              <div class="form-group">
+                <button type="submit" class="btn form-control btn-primary rounded submit px-3">Sign Up</button>
+              </div>
+              </form> 
+
+              <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+                <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
+              </div>
+
+            </div>
+
+            <div>
+              <p class="mb-0">Have an account? <a href="{% url 'login'%}" class="text-white-50 fw-bold">Sign In</a>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 </body>
 </html>
