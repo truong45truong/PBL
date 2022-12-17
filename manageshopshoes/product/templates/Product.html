@@ -30,7 +30,7 @@
 
 								<div class="panel-heading">
 									<h4 class="panel-title">
-										<a href="{% url 'product' slug='0' arr=0 %}">
+										<a href="{% url 'product' slug='0' %}">
                     All
 										</a>
 									</h4>
@@ -49,12 +49,12 @@
 									<div class="panel-body">
 										<ul class="list-unstyled">
                     <li>
-                      <a href="{% url 'product' slug=node.slug arr=0 %}">{{subcate.name}}</a>
+                      <a href="{% url 'product' slug=node.slug %}">{{subcate.name}}</a>
                       {% comment %} <a href="{% url 'product' slug=subcate.slug %}">{{subcate.name}}</a> {% endcomment %}
                     </li>
                     {% for subcate in node.get_children %}
                     <li>
-                      <a href="{% url 'product' slug=subcate.slug arr=0 %}">{{subcate.name}}</a>
+                      <a href="{% url 'product' slug=subcate.slug %}">{{subcate.name}}</a>
                       {% comment %} <a href="{% url 'product' slug=subcate.slug %}">{{subcate.name}}</a> {% endcomment %}
                     </li>
                     {% endfor %}
@@ -126,7 +126,7 @@
                     <p class="position-absolute price-value-product">{{pro.prices__price|intcomma}}VND</p>
                     </a>
                     {% if pro.prices__sale > 0.0 %}
-                    <div class="ribbon sale">SALE&nbsp{{pro.prices__sale}}%</div>
+                    <div class="ribbon sale">SALE {{pro.prices__sale}}%</div>
                     {% endif %}
                     <div class="text-center content-card">
                       <p>{{pro.id}}</p>
@@ -186,7 +186,8 @@
 
     </div>
   </main>
-
+  <link rel="stylesheet"  href="{% static 'js/product.js'%}"/>
+   {% include 'footer.html' %}
 {% endblock %}
 {% block javastript %}
 {% load static %}
