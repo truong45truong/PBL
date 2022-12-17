@@ -77,7 +77,7 @@ def productPage(request, slug):
     page_number = request.GET.get('page') if request.GET.get('page') != None else '1'
     page_obj = paginator.get_page(page_number)
     nums = "a" * page_obj.paginator.num_pages
-    return render(request, 'products.html', 
+    return render(request, 'Product.html', 
                   {'products': page_obj, 'page': int(page_number), 'list_category':list_category, 'nums':nums,
                 #    'product_all_cat': product_all_cat,
                     # 'product':product, 'list_size':list_size
