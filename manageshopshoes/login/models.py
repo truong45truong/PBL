@@ -38,7 +38,7 @@ class User(AbstractUser):
         return self.username
 class Feedback(models.Model):
     id = models.BigAutoField(primary_key=True)
-    reason = models.CharField(max_length=200,null=False)
+    reason = models.CharField(max_length=200,null=True)
     note = models.TextField(null=True)
     replay = models.TextField(null=True)
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from product.filters import ProductFilter
 from django.shortcuts import render,redirect
-from login.models import User,Customer,Store
+from login.models import User,Customer,Store,Feedback
 from login.views import upload,handleImageUpload
 from login.forms import ImageStoreForm
 def homePage(request):
@@ -63,3 +63,23 @@ def myStorePage(request):
         return redirect('registerstore')
     else:
         return render(request,'store.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) ,'dataStore':dataStore[0] ,'current' : request.user ,'formImage':formImage})
+
+def introducePage(request):
+    if (request.user.is_anonymous is False):
+        return render(request,'introduce.html',{ 'current' :request.user })
+    else :
+        return render(request,'introduce.html',{ 'current' : False })
+    
+def contactPage(request):
+    if (request.user.is_anonymous is False):
+        if request.POST :
+            name = request.POST.get('name')
+            email = request.POST.get('mail')
+            content = request.POST.get('content')
+            reason = request.POST.get('reason')
+            note ="name : " + name + "\n" + "email : " + email + "\n" + "content : " +content
+            Feedback.objects.create(reason = reason , note = note , user_id = request.user )
+        return render(request,'contact.html',{ 'current' :request.user })
+    else :
+        
+        return render(request,'contact.html',{ 'current' : False })

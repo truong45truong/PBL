@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm, PriceForm, PhotoProductForm
 from .models import Categorie, Photo_product, Product, Price, Size
+from login.models import User,Store , Customer
 from django.core.paginator import Paginator
 from .filters import ProductFilter
 from django.template.defaultfilters import slugify
@@ -64,58 +65,65 @@ def productPage(request, slug):
     paginator = Paginator(filtered_qs, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'Product.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) })
+    if (request.user.is_anonymous is False):
+        return render(request,'Product.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages), 'current' :request.user,'store': True})
+    else :
+        return render(request,'Product.html',{ 'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages),'current' : False ,'store': True})
+    #return render(request, 'Product.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) })
 
 
 def productDetail(request, slug, slugproduct):
     return render(request, 'ProductDetail.html')
 
-
+@login_required
 def productNewPage(request):
 
     def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
-    form_product = ProductForm()
-    form_price = PriceForm()
-    form_photoproduct = PhotoProductForm()
-    if request.method == 'POST':
-        form_price = PriceForm(request.POST)
-        form_photoproduct = PhotoProductForm(request.POST, request.FILES)
-        form_product = ProductForm(request.POST)
-        if form_product.is_valid():
-            name = form_product.cleaned_data['name']
-            sex = form_product.cleaned_data['gender']
-            description = form_product.cleaned_data['description']
-            category = form_product.cleaned_data['category_id']
-            while True:
-                try:
-                    product = Product(name=name, sex=sex, description=description,
-                                       category_id=category, slug=slugify(
-                                           name) + "-" + id_generator()
-                                       )
-                    break
-                except:
-                    pass
-            product.save()
-            for i in range(35, 45):
-                quantity = request.POST.get('sizevalue_' + str(i))
-                Size(size=i, quantity=quantity, product_id=product).save()
+    userCurrent = User.objects.get(username=request.user)
+    if userCurrent.store_id:
+        form_product = ProductForm()
+        form_price = PriceForm()
+        form_photoproduct = PhotoProductForm()
+        if request.method == 'POST':
+            form_price = PriceForm(request.POST)
+            form_photoproduct = PhotoProductForm(request.POST, request.FILES)
+            form_product = ProductForm(request.POST)
+            if form_product.is_valid():
+                name = form_product.cleaned_data['name']
+                sex = form_product.cleaned_data['gender']
+                description = form_product.cleaned_data['description']
+                category = form_product.cleaned_data['category_id']
+                while True:
+                    try:
+                        product = Product(name=name, sex=sex, description=description,
+                                        category_id=category, slug=slugify(
+                                            name) + "-" + id_generator()
+                                        )
+                        break
+                    except:
+                        pass
+                product.save()
+                for i in range(35, 45):
+                    quantity = request.POST.get('sizevalue_' + str(i))
+                    Size(size=i, quantity=quantity, product_id=product).save()
 
-        if form_price.is_valid():
-            price = form_price.cleaned_data['price']
-            sale = form_price.cleaned_data['sale']
-            price_product = Price(price=price, sale=sale, price_total=(100-float(sale))*float(price)/100,
-                                   product_id=Product(id=product.id), datetime_create=datetime.datetime.now()
-                                   )
-    
+            if form_price.is_valid():
+                price = form_price.cleaned_data['price']
+                sale = form_price.cleaned_data['sale']
+                price_product = Price(price=price, sale=sale, price_total=(100-float(sale))*float(price)/100,
+                                    product_id=Product(id=product.id), datetime_create=datetime.datetime.now()
+                                    )
+        
 
-            price_product.save()
-        if form_photoproduct.is_valid():
-            upload(request.FILES['data'], product.id)
-            handleImageUpload(request.FILES['data'], product.id)
+                price_product.save()
+            if form_photoproduct.is_valid():
+                upload(request.FILES['data'], product.id)
+                handleImageUpload(request.FILES['data'], product.id)
+        return render(request, 'Productnew.html', {'form_product': form_product, 'form_price': form_price, 'form_photoproduct': form_photoproduct, 'current' :request.user,'store': True})
 
-    return render(request, 'Productnew.html', {'form_product': form_product, 'form_price': form_price, 'form_photoproduct': form_photoproduct})
+    return  render(request, 'noHaveAccountStore.html',{'current' :request.user,'store': True})
 
 
 def upload(f, product):

@@ -49,7 +49,19 @@ def myStorePage(request):
     if(len(dataStore)==0):
         return redirect('registerstore')
     else:
-        return render(request,'store.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) ,'dataStore':dataStore[0] ,'current' : request.user ,'formImage':formImage})
+        return render(request,'storeInfo.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) ,'dataStore':dataStore[0] ,'current' : request.user ,'formImage':formImage})
 
 
+def detailStorePage(request,slugstore):
+    list_product = Product.objects.filter(
+        prices__isnull=False, photo_products__isnull=False).values(
+        'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo')
+    filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
+    paginator = Paginator(filtered_qs, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if (request.user.is_anonymous is False):
+        return render(request,'storeDetail.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages), 'current' :request.user,'store': True})
+    else :
+        return render(request,'storeDetail.html',{ 'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages),'current' : False ,'store': True})
 
