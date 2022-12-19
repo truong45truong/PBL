@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from login.models import User,Customer,Store
-from product.models import Product
+from product.models import Product, Categories, Price
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from product.filters import ProductFilter
@@ -8,11 +8,25 @@ from django.shortcuts import render,redirect
 from login.models import User,Customer,Store,Feedback
 from login.views import upload,handleImageUpload
 from login.forms import ImageStoreForm
+
+# path save photo
+
+path_upload = "D:\TranTran\Ki 7\PBL-main\PBL\manageshopshoes\media_upload\photos"
+path_root = "D:\TranTran\Ki 7\PBL-main\PBL\manageshopshoes\media\photos"
+
 def homePage(request):
+    list_category = Categories.objects.all()
+    
+    # return render (request,'home.html', 
+    #                {'list_category':list_category,
+    #                 })
     if (request.user.is_anonymous is False):
-        return render(request,'home.html',{ 'current' :request.user })
+        return render(request,'home.html',{ 'current' :request.user,
+                                           'list_category':list_category,})
     else :
-        return render(request,'home.html',{ 'current' : False })
+        return render(request,'home.html',{ 'current' : False,
+                                           'list_category':list_category,})
+    
 # Create your views here.
 @login_required
 def myAccountPage(request):

@@ -17,231 +17,168 @@
       </header>
     </div>
     <div class="container">
-        <hr class="w-100">
-        <div class="select-sort-content">
-          <div class="row">
-            <div class="my-3 sortItems w-100">
-              <form  class="nav w-100" action="{{request.path}}" method="GET" enctype="multipart/form-data">
-                {% csrf_token %}
-                <li class="nav-item text-center col-2 m-0 p-2">
-                  <a class="nav-link active text-bg-secondary" aria-current="page" href="#">Relevance</a>
-                </li>
-                <li class="nav-item text-center col-2 m-0 p-2">
-                  <a class="nav-link" href="?latest=1">Latest</a>
-                </li>
-                <li class="nav-item text-center col-2 m-0 p-2">
-                  <a class="nav-link" href="?topsale=1">Top Sale</a>
-                </li>
-                <li class="nav-item text-center col-2 m-0 p-2">
-                  <select name="sortselect" class="form-select price-sort" aria-label="Default select example">
-                    <option disabled selected value>All Price</option>
-                    <option value="low"><a class="nav-link" href="#">Low to High</a></option>
-                    <option value="hight"><a class="nav-link" href="#">High to Low</a></option>
-                  </select>
-                </li>
-                <li class="nav-item text-center col-2 m-0 p-2">
-                  <select name="limitselect" class="form-select price-value-sort" aria-label="Default select example">
-                    <option disabled selected value>All limit</option>
-                    <option value="0-1000000">low 1.000.000</option>
-                    <option value="1000000-5000000">1.000.000 - 5.000.000 </option>
-                    <option value="5000000-15000000">5.000.000 - 15.000.000</option>
-                    <option value="15000000-0"> 15.000.000 High </option>
-                  </select>
-                </li>
-                <li class="nav-item text-center col-2 m-0 p-2">
-                  <select name="sexselect" class="form-select sex-sort" aria-label="Default select example">
-                    <option disabled selected value>All sex</option>
-                    <option value="1">Men</option>
-                    <option value="2">Women</option>
-                  </select>
-                </li>
-                <li class="nav-item text-center col-2 m-0 p-2 ">
-                  <select name="categoryselect" class="form-select sex-sort" aria-label="Default select example">
-                    <option disabled selected value>Category</option>
-                    <option  value="Addidas">Addidas</option>
-                    <option value="Puma">Puma</option>
-                  </select>
-                </li>
-                <input type="submit">
-              </form>
-            </div>
-          </div>
-          <div class="row">
-            {% csrf_token %}
-            {% for item in page_obj %}
-            <div class="col-md-2 col-6 mb-2">
-              <div class="position-relative content-col">
-                <a href="ProductDetail.html">
-                  <img src="/media/photos/products/{{item.photo_products__name}}">
-                </a>
-                <div class="ribbon new">
-                  <div class="theribbon"><p>New</p> </div>
-                </div>
-                {% if item.prices__sale > 0%}
-                  <div class="ribbon sale">
-                    <div class="theribbon price-sale"><p>-{{item.prices__sale}} %</p> </div>
-                  </div>
-                  <p class="position-absolute price-value-product"> {{item.prices__price}} đ</p>
+      <div class="row justify-content-around">
+        <div class="col-sm-3">
+					<div class="left-sidebar">
+						<h2>Filter</h2>
+            {% load mptt_tags %}
+            <h5 class="text-center">Category</h5>
+						<div class="panel-group category-products" id="accordian">
+							<div class="root panel panel-default">
+
+                
+
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a href="{% url 'product' slug='0' %}">
+                    All
+										</a>
+									</h4>
+								</div>
+                {% recursetree list_category %}
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a data-bs-toggle="collapse" data-parent="#accordian" href="#filter{{node.get_root.name}}">
+                    <span class="badge pull-right"><i class="fa fa-plus"></i></span>
+											{{ node.name }}
+										</a>
+									</h4>
+								</div>
+                {% if not node.is_leaf_node %}
+								<div id="filter{{node.get_root.name}}" class="children panel-collapse collapse">
+									<div class="panel-body">
+										<ul class="list-unstyled">
+                    <li>
+                      <a href="{% url 'product' slug=node.slug %}">{{subcate.name}}</a>
+                      {% comment %} <a href="{% url 'product' slug=subcate.slug %}">{{subcate.name}}</a> {% endcomment %}
+                    </li>
+                    {% for subcate in node.get_children %}
+                    <li>
+                      <a href="{% url 'product' slug=subcate.slug %}">{{subcate.name}}</a>
+                      {% comment %} <a href="{% url 'product' slug=subcate.slug %}">{{subcate.name}}</a> {% endcomment %}
+                    </li>
+                    {% endfor %}
+										</ul>
+									</div>
+								</div>
                 {% endif %}
-                <div class="text-center content-card">
-                  <span id="slug-product-detail-{{item.slug}}" class="d-none">{{item.slug}}</span>
-                  <p class="name-product" id="name-product-{{item.slug}}" > {{item.name}}</p>
-                  {% if item.sex == 0 %}
-                  <p class="sex-product" id="sex-product-{{item.slug}}">All</p>
-                  {% endif %}
-                  {% if item.sex == 1 %}
-                  <p class="sex-product" id="sex-product-{{item.slug}}">Men</p>
-                  {% endif %}
-                  {% if item.sex == 2 %}
-                  <p class="sex-product" id="sex-product-{{item.slug}}">Women</p>
-                  {% endif %}
-                  <p class="name-product" id="price-total-product-{{item.slug}}"> {{item.prices__price_total}} đ</p>
-                  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal{{item.slug}}">
-                    <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
-                </div>
-              </div>
-              <div class="modal fade modalQuickShop" id="exampleModal{{item.slug}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <form action="" class="form">
-                      <div class="modal-header">
-                        <a class="modal-title h5 mb-0" href="ProductDetail.html" tabindex="0">{{item.name}}</a>
-                        <button type="button" class="btn-close btn-close-white close-outside" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body pt-0">
-                        <div class="border-top w-100 pb-2"></div>
-                        <div class="row">
-                          <div class="col-5">
-                            <div class="images modalItemImg">
-                              <a href="">
-                                <img src="/media/photos/products/{{item.photo_products__name}}" class="d-block w-100" alt="...">
-                              </a>
-                            </div>
-                          </div>
-                          <div class="col-7">
-                            {% if item.sex == 0 %}
-                              <small class="sex-product">All</small>
-                            {% endif %}
-                            {% if item.sex == 1 %}
-                              <small class="sex-product">Men</small>
-                            {% endif %}
-                            {% if item.sex == 2 %}
-                              <small class="sex-product">Women</small>
-                            {% endif %} 
-                            <h5 class=""><span id="price" name="price_add_to_cart">{{item.prices__price_total}}</span></h5>
-                            <div class="row g-3 align-items-center">
-                              <label for="selectSize" class="col-auto me-4">Size:</label>
-                              <!-- <br> -->
-                              <div class="flex-wrap col-auto" role="group" aria-label="Basic radio toggle button group">
-                                <ul id="list-size-{{item.slug}}" class="list-size">
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option1-{{item.slug}}" title="35" value="1" checked>
-                                    <label class="btn btn-outline-secondary" for="option1-{{item.slug}}">35</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option2-{{item.slug}}" title="36" value="0">
-                                    <label class="btn btn-outline-secondary" for="option2-{{item.slug}}">36</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option3-{{item.slug}}" title="37" value="0">
-                                    <label class="btn btn-outline-secondary" for="option3-{{item.slug}}">37</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option4-{{item.slug}}" title="38" value="0">
-                                    <label class="btn btn-outline-secondary" for="option4-{{item.slug}}">38</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option5-{{item.slug}}" title="39" value="0">
-                                    <label class="btn btn-outline-secondary" for="option5-{{item.slug}}">39</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option6-{{item.slug}}" title="40" value="0">
-                                    <label class="btn btn-outline-secondary" for="option6-{{item.slug}}">40</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option7-{{item.slug}}" title="41" value="0">
-                                    <label class="btn btn-outline-secondary" for="option7-{{item.slug}}">41</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option8-{{item.slug}}" title="42" value="0">
-                                    <label class="btn btn-outline-secondary" for="option8-{{item.slug}}">42</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option9-{{item.slug}}" title="43" value="0">
-                                    <label class="btn btn-outline-secondary" for="option9-{{item.slug}}">43</label>
-                                  </li>
-                                  
-                                  <li class="btn-select-size">
-                                    <input type="checkbox" class="btn-check" name="options" id="option10-{{item.slug}}" title="44" value="0">
-                                    <label class="btn btn-outline-secondary" for="option10-{{item.slug}}">44</label>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                            <br>
-                            <!-- <label for="quantityProduct" class="text-muted">Quantity:&nbsp;&nbsp;</label>
-                            <input type="number" value="0" size="1" min="0" max="10" id="quantity"/> -->
-                            <div class="row g-3 align-items-center">
-                                <div class="col-auto">
-                                    <label for="quantityProduct" class="col-form-label">Quantity:</label>
-                                </div>
-                                <div class="col-auto">
-                                  <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                    <button type="button" class="btn btn-outline-secondary" 
-                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                      <i class="fas fa-subtract"></i>
-                                    </button>
-                                    <input id="quantity-product-{{item.slug}}" type="number" name="quantityItem" min="0" max="20" size="1" value="1" class="text-center"/>
-                                    <button type="button" class="btn btn-outline-secondary"
-                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                    <i class="fas fa-plus"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                                <div class="col-auto">
-                                    <span id="quantityAvail" class="form-text">
-                                        360 pieces available
-                                    </span>
-                                </div>
-                              </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer pb-3">
-                        <div class="modalAddCart"> 
-                          <button type="button" class="btn btn-primary modalAddCart" id="addtocart" value="{{item.slug}}">
-                            <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
+                {% endrecursetree %}
+							</div>
+						</div><!--/category-productsr-->
+						
+            <h5 class="text-center">Product for</h5>
+
+            <div class="panel-group category-products" id="accordian">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<ul class="list-unstyled">
+                      <li>
+                        <a href="?sexselect=0">
+                          <p class="">All</p>
+                        </a>
+                        <a href="?sexselect=1">
+                          <p class="" id="sex-product-detail">Men</p>
+                        </a>
+                        <a href="?sexselect=2">
+                          <p class="">Women</p>
+                        </a>
+                      </li>
+										</ul>
+									</h4>
+								</div>
+							</div>
+						</div><!--/category-productsr-->
+
+            <h5 class="text-center">Price range</h5>
+            <div>
+                <input type="text" name="minprice" id=""> 
+                -- 
+                <input type="text" name="maxprice" id="">
+                <button type="submit">Apply</button>
+            </div>
+
+					</div>
+				</div>
+
+        <div class="col-xl-9 pe-0">
+          <div class="right-sidebar">
+					  <h2 class="title text-center">Items</h2>
+            <div class="sortItems">
+              <div class="mb-3 d-flex align-items-center">
+                <span class="d-inline-block me-2">Sort by</span>
+                <select name="sortby" class="form-select price-sort w-auto border-0" aria-label="Default select example" onchange = "window.location.href =  this.value">
+                    {% comment %} <option disabled selected value>All Price</option> {% endcomment %}
+                    <option value="?sortby=lastest" {% if sortby == "lastest" %} selected = "selected" {%endif%}>Lastest</option>
+                    <option value="?sortby=highrate"{% if sortby == "highrate" %} selected = "selected" {%endif%}>High Rate</option>
+                    <option value="?sortby=lowtohigh"{% if sortby == "lowtohigh" %} selected = "selected" {%endif%}>Price: Low to High</option>
+                    <option value="?sortby=hightolow"{% if sortby == "hightolow" %} selected = "selected" {%endif%}>Price: High to Low</option>
+                  </select>
               </div>
             </div>
-            {%endfor%}
-            <div class="d-flex">
-              <ul class="pagination m-auto">
-                <a class="page-link page-pagi" href="?page=1">&laquo; first</a>
-                {% if page_obj.has_previous %}
-                  <a class="page-link page-pagi" href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-                {% for page in pages %}
-                <li class="page-item"><a class="page-link page-pagi" href="?page={{page}}">{{page}}</a></li>
-                {% endfor %}
-                {% if page_obj.has_next %}
-                  <a class="page-link page-pagi" href="?page={{ page_obj.next_page_number }}">next</a>
-                {% endif %}
-                <a class="page-link page-pagi" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-              </ul>
+
+            <div class="row">
+              {% for pro in products %}
+              {% load humanize %}
+                <div class="col-md-3 col-5 mb-2 ">
+                  <div class="content-col justify-content-between">
+                    <a href="{% url 'productdetail' slug=pro.slug %}"><img src="{% static 'image/sp1.png' %}">
+                    <p class="position-absolute price-value-product">{{pro.prices__price|intcomma}}VND</p>
+                    </a>
+                    {% if pro.prices__sale > 0.0 %}
+                    <div class="ribbon sale">SALE {{pro.prices__sale}}%</div>
+                    {% endif %}
+                    <div class="text-center content-card">
+                      <p>{{pro.id}}</p>
+                      <p class="price">
+                        {{pro.prices__price_total|intcomma}}VND
+                      </p>
+                      <a href="" class="text-decoration-none"><p class="name-product">{{pro.name}}</p></a>
+                      {% if pro.sex == 0 %}
+                      <p class="sex-product">Men & Women</p>
+                      {% endif %}
+                      {% if pro.sex == 1 %}
+                      <p class="sex-product" id="sex-product-detail">Men</p>
+                      {% endif %}
+                      {% if pro.sex == 2 %}
+                      <p class="sex-product">Women</p>
+                      {% endif %}
+                      <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal{{pro.slug}}">
+                        <i class="fa-solid fa-cart-shopping me-2"></i>Add to cart</button>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+
+
+
+              <br>
+
+
+              <div class="pages mt-5">
+                <nav aria-label="Page navigation example" class="d-flex justify-content-center" style="height: 8%">
+                  <ul class="pagination">
+                    {% if products.has_previous %}
+                      <li class="page-item"><a class="page-link" href="?page=1">&laquo First</a></li>
+                      <li class="page-item"><a class="page-link" href="?page={{products.previous_page_number}}">Previous</a></li>
+                    {% endif %}
+                    {% for i in nums %}
+                      <li 
+                        {% if forloop.counter == page %}
+                          class="page-item active"
+                        {% else %}
+                          class="page-item"
+                        {% endif %}><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                    {% endfor %}
+                    {% if products.has_next %}
+                      <li class="page-item"><a class="page-link" href="?page={{products.next_page_number}}">Next</a></li>
+                      <li class="page-item"><a class="page-link" href="?page={{products.paginator.num_pages}}">Last &raquo</a></li>
+                    {% endif %}
+                  </ul>
+                </nav>
+              </div>
             </div>
+
           </div>
           
         </div>
@@ -249,7 +186,8 @@
 
     </div>
   </main>
-
+  <link rel="stylesheet"  href="{% static 'js/product.js'%}"/>
+   {% include 'footer.html' %}
 {% endblock %}
 {% block javastript %}
 {% load static %}

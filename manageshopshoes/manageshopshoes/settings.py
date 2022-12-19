@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'livereload',
     'corsheaders',
+    'mptt',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -94,9 +96,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'manageshopshoes',
         'USER':'root',
-        'PASSWORD':'Sklearn100$',
+        'PASSWORD':'',
         'HOST':'localhost',
-        'PORT': '3306',
+        'PORT': '3307',
     }
 }
 

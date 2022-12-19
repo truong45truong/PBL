@@ -68,7 +68,7 @@ def registerPage(request):
         birthday = request.POST.get('birthday')
         
         if (password != confirm_password):
-            messages.success(request, 'mật khẩu không trùng!')
+            messages.success(request, 'The passwords do not match. Please enter the password again.')
             return render(request, 'register.html')
         try:
             user = User.objects.get(username=username)
