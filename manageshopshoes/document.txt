@@ -16,3 +16,4 @@ pip install -r requirement.txt
 runserver 
 
 1 -> python manage.py runserver ____ ( không hoặc host)
+settings - > ALLOWHOST[host]
