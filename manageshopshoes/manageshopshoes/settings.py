@@ -94,9 +94,9 @@ WSGI_APPLICATION = 'manageshopshoes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'manageshopshoes',
+        'NAME': 'truong45truong$manageshopshoes',
         'USER':'truong45truong',
-        'PASSWORD':'',
+        'PASSWORD':'Sklearn100$',
         'HOST':'truong45truong.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
