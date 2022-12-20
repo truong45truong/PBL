@@ -1,12 +1,10 @@
 from django.urls import path,include
-from . import views
-from rest_framework import routers
-
-
-router = routers.SimpleRouter()
-router.register(r'product',views.Productviewset)
-router.register(r'price',views.Priceviewset)
-router.register(r'size',views.Sizeviewset)
+from .views import Productviewset
+product = Productviewset.as_view({
+    'get' : 'get_product',
+    #'post' : 'post_product'
+})
 urlpatterns = [
-    path('', include((router.urls))),
+    path('product/',product,name="get_product")
 ]
+print(urlpatterns)

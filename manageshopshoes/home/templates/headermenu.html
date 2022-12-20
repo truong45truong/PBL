@@ -30,9 +30,6 @@
             <div class="d-flex align-content-center">
               <a id="shopping-cart-link text-white text-decoration-none" href="{% url 'shoppingcart' %}">
                 <i class="fa-solid fa-cart-shopping me-2 text-white text-decoration-none"></i>
-                <p class="m-auto content-icon-header text-white text-decoration-none">
-                  0 item - 0đ
-                </p>
               </a>
             </div>
           </div>
@@ -48,7 +45,7 @@
         {% endif %}
       </div>
     </div>
-    {% if store != True%}
+    {% if store != True %}
     <div class="header-bottom">
       <div class="container">
         <div class="navbar navbar-expand-lg mb-4 content-header-bottom">
@@ -62,19 +59,13 @@
             <ul class="navbar-nav">
               <li class="bar-exit"><i class="fa-solid fa-x"></i></li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}">Home</a>
+                <a class="nav-link text-black" href="{% url 'home' %}">Home</a>
               </li>
               <li class="nav-item">
-                <a href="{% url 'introduce' %}">Introduce</a>
+                <a class="nav-link"  href="{% url 'introduce' %}">Introduce</a>
               </li>
               <li class="nav-item">
-                <a href="#">Products</a>
-              </li>
-              <li class="nav-item">
-                <a href="#">News</a>
-              </li>
-              <li class="nav-item">
-                <a href="{% url 'contact' %}">Contact</a>
+                <a class="nav-link"  href="{% url 'contact' %}">Contact</a>
               </li>
               <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">Category</a>
@@ -104,12 +95,6 @@
                 </li>
                 {% endrecursetree %}
               </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Introduce</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
             </li>
             </ul>
             <div id="bar-menu">

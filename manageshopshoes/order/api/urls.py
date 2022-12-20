@@ -9,4 +9,3 @@ router.register(r'detailorder',views.DetailOrderViewset)
 urlpatterns = [
     path('',include((router.urls))),
 ]
-print('url',router.urls)

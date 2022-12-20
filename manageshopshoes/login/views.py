@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.backends import ModelBackend
+from product.models import Categories
 import shutil
 import os
 
@@ -95,6 +96,7 @@ def registerPage(request):
 
 @login_required
 def registerStorePage(request):
+    list_category = Categories.objects.all()
     current = request.user
     name = request.POST.get('name')
     email = request.POST.get('phone')
@@ -117,7 +119,10 @@ def registerStorePage(request):
             print(store.logo)
             upload(logo,str(store.logo))
             handleImageUpload(str(store.logo))
-    return render(request, 'registerStore.html', {'current': current,'form' : form})
+        redirect('home')
+    return render(request, 'registerStore.html', {'current': current,'form' : form,
+                                                  'list_category' : list_category,
+                                                  })
 
 
 def upload(f, nameFile):

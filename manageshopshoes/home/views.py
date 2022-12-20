@@ -16,28 +16,30 @@ path_root = "D:\TranTran\Ki 7\PBL-main\PBL\manageshopshoes\media\photos"
 
 def homePage(request):
     list_category = Categories.objects.all()
-    
     # return render (request,'home.html', 
     #                {'list_category':list_category,
     #                 })
     if (request.user.is_anonymous is False):
         return render(request,'home.html',{ 'current' :request.user,
-                                           'list_category':list_category,})
+                                           'list_category':list_category})
     else :
         return render(request,'home.html',{ 'current' : False,
-                                           'list_category':list_category,})
+                                           'list_category':list_category})
     
 # Create your views here.
 @login_required
 def myAccountPage(request):
     dataCustomerCurrent = Customer.objects.filter(users__username=request.user)
     dataUserCurrent = User.objects.get(username=request.user)
+    list_category = Categories.objects.all()
     return render(request,'account.html',{ 'current' :request.user ,
                                            'dataUserCurrent':dataUserCurrent,
-                                           'dataCustomerCurrent':dataCustomerCurrent[0]
+                                           'dataCustomerCurrent':dataCustomerCurrent[0],
+                                           'list_category':list_category
                                            })
 @login_required
 def myStorePage(request):
+    list_category = Categories.objects.all()
     dataStore = Store.objects.filter(users__username=request.user)
     list_product = Product.objects.filter(
         prices__isnull=False, photo_products__isnull=False).values(
@@ -76,15 +78,22 @@ def myStorePage(request):
     if(len(dataStore)==0):
         return redirect('registerstore')
     else:
-        return render(request,'store.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) ,'dataStore':dataStore[0] ,'current' : request.user ,'formImage':formImage})
+        return render(request,'store.html',{'page_obj': page_obj, 'pages': range(1, 
+                                            page_obj.paginator.num_pages) ,
+                                            'dataStore':dataStore[0] ,'current' : request.user ,
+                                            'formImage':formImage,
+                                            'list_category':list_category
+                                            })
 
 def introducePage(request):
+    list_category = Categories.objects.all()
     if (request.user.is_anonymous is False):
-        return render(request,'introduce.html',{ 'current' :request.user })
+        return render(request,'introduce.html',{ 'current' :request.user ,'list_category':list_category})
     else :
-        return render(request,'introduce.html',{ 'current' : False })
+        return render(request,'introduce.html',{ 'current' : False ,'list_category':list_category})
     
 def contactPage(request):
+    list_category = Categories.objects.all()
     if (request.user.is_anonymous is False):
         if request.POST :
             name = request.POST.get('name')
@@ -93,7 +102,7 @@ def contactPage(request):
             reason = request.POST.get('reason')
             note ="name : " + name + "\n" + "email : " + email + "\n" + "content : " +content
             Feedback.objects.create(reason = reason , note = note , user_id = request.user )
-        return render(request,'contact.html',{ 'current' :request.user })
+        return render(request,'contact.html',{ 'current' :request.user ,'list_category':list_category})
     else :
         
-        return render(request,'contact.html',{ 'current' : False })
+        return render(request,'contact.html',{ 'current' : False ,'list_category':list_category})

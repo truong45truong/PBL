@@ -12,10 +12,11 @@ import datetime
 import random
 import string
 import json
+from django.conf import settings
 # path save photo
 
-path_upload = "D:\TranTran\Ki 7\PBL-main\PBL\manageshopshoes\media_upload\photos"
-path_root = "D:\TranTran\Ki 7\PBL-main\PBL\manageshopshoes\media\photos"
+path_upload = str(settings.BASE_DIR)+"/media_upload/photos"
+path_root = str(settings.BASE_DIR)+"/media/photos"
 # Create your views here.
 
 
@@ -39,7 +40,7 @@ def productPage(request, slug):
         name_arr = '-prices__price_total'
         
     if slug=='0':
-        list_product = Product.objects.filter(
+        list_product = Product.objects.filter( photo_products__isnull=False,
         # prices__isnull=False, photo_products__isnull=False, category_id__slug=slug).values(
         prices__isnull=False).values(
         'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo').order_by(name_arr)
@@ -47,7 +48,7 @@ def productPage(request, slug):
     else:
         list_product = Product.objects.filter(
         # prices__isnull=False, photo_products__isnull=False, category_id__slug=slug).values(
-        prices__isnull=False, category_id__slug=slug).values(
+        prices__isnull=False, category_id__slug=slug, photo_products__isnull=False).values(
         'name', 'slug', 'sex', 'prices__price', 'prices__sale', 'photo_products__name', 'prices__price_total', 'category_id__logo').order_by(name_arr)
         filtered_qs = ProductFilter(request.GET, queryset=list_product).qs
     
@@ -77,10 +78,15 @@ def productPage(request, slug):
     page_number = request.GET.get('page') if request.GET.get('page') != None else '1'
     page_obj = paginator.get_page(page_number)
     if (request.user.is_anonymous is False):
-        return render(request,'Product.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages), 'current' :request.user,'store': True})
+        return render(request,'Product.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages), 
+                                              'current' :request.user,'store': True,
+                                              'list_category':list_category,
+                                              })
     else :
-        return render(request,'Product.html',{ 'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages),'current' : False ,'store': True})
-    #return render(request, 'Product.html', {'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) })
+        return render(request,'Product.html',{ 'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages),
+                                              'current' : False ,'store': True,
+                                              'list_category':list_category,
+                                              })
 
 
 def productDetail(request, slug, slugproduct):
@@ -88,7 +94,9 @@ def productDetail(request, slug, slugproduct):
 
 @login_required
 def productNewPage(request):
-
+    print(settings.BASE_DIR)
+    list_category=Categories.objects.all()
+    
     def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
@@ -110,7 +118,7 @@ def productNewPage(request):
                     try:
                         product = Product(name=name, sex=sex, description=description,
                                         category_id=category, slug=slugify(
-                                            name) + "-" + id_generator()
+                                            name) + "-" + id_generator(),store_id=userCurrent.store_id
                                         )
                         break
                     except:
@@ -132,7 +140,12 @@ def productNewPage(request):
             if form_photoproduct.is_valid():
                 upload(request.FILES['data'], product.id)
                 handleImageUpload(request.FILES['data'], product.id)
-        return render(request, 'Productnew.html', {'form_product': form_product, 'form_price': form_price, 'form_photoproduct': form_photoproduct, 'current' :request.user,'store': True})
+        return render(request, 'Productnew.html', {'form_product': form_product, 
+                                                   'form_price': form_price, 
+                                                   'form_photoproduct': form_photoproduct, 
+                                                   'current' :request.user,'store': True,
+                                                   'list_category':list_category,
+                                                   })
 
     return  render(request, 'noHaveAccountStore.html',{'current' :request.user,'store': True})
 

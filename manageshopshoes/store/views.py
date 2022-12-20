@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from login.models import Store
-from product.models import Product
+from product.models import Product,Categories
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from product.filters import ProductFilter
@@ -11,6 +11,7 @@ from login.forms import ImageStoreForm
 
 @login_required
 def myStorePage(request):
+    list_category = Categories.objects.all()
     dataStore = Store.objects.filter(users__username=request.user)
     list_product = Product.objects.filter(
         prices__isnull=False, photo_products__isnull=False).values(
@@ -49,7 +50,12 @@ def myStorePage(request):
     if(len(dataStore)==0):
         return redirect('registerstore')
     else:
-        return render(request,'storeInfo.html',{'page_obj': page_obj, 'pages': range(1, page_obj.paginator.num_pages) ,'dataStore':dataStore[0] ,'current' : request.user ,'formImage':formImage})
+        return render(request,'storeInfo.html',{'page_obj': page_obj, 
+                                                'pages': range(1, page_obj.paginator.num_pages) ,
+                                                'dataStore':dataStore[0] ,'current' : request.user ,
+                                                'formImage':formImage,
+                                                'list_category': list_category
+                                                })
 
 
 def detailStorePage(request,slugstore):
