@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'product.apps.ProductConfig',
     'order.apps.OrderConfig',
     'rest_framework',
-    'livereload',
     'corsheaders',
     'mptt',
     'django.contrib.humanize',
