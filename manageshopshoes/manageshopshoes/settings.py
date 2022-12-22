@@ -45,8 +45,10 @@ INSTALLED_APPS = [
     'order.apps.OrderConfig',
     'rest_framework',
     'corsheaders',
+    'livereload',
     'mptt',
     'django.contrib.humanize',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -93,10 +95,10 @@ WSGI_APPLICATION = 'manageshopshoes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'truong45truong$manageshopshoes',
-        'USER':'truong45truong',
+        'NAME': 'manageshopshoes',
+        'USER':'root',
         'PASSWORD':'Sklearn100$',
-        'HOST':'truong45truong.mysql.pythonanywhere-services.com',
+        'HOST':'localhost',
         'PORT': '3306',
     }
 }
@@ -151,3 +153,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = 'sb-ipzcv22342999@business.example.com'
